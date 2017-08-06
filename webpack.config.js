@@ -13,13 +13,32 @@ module.exports = {
   entry: "./js/App.js",
   module: {
     rules: [
-      {test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader']}
+      {
+        test: /\.scss$/, 
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use:[ 'css-loader', 'sass-loader'],
+          
+        }) 
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+      }
     
     ]
   },
   output: {
     path: __dirname + "dist",
-    filename: "./main.min.js"
+    filename: "main.min.js"
+  },
+  devServer:{
+    contentBase: path.join(__dirname, "dist"),
+    compress: true,
+    port: 8080, 
+    stats: "errors-only",
+    
   },
   plugins: [
     
@@ -28,7 +47,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Portfolio',
       template: './index.html',
+      
     }),
-
+    new ExtractTextPlugin("app.css"),
   ],
 };
