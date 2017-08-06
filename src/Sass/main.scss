@@ -1,7 +1,9 @@
-body {
-    background-color: greenyellow;
-    p{
-        color: brown;
+@import '../bootstrap/customizations.scss';
+
+body{
+
+    background-color: red;
+    h1{
+        color:$brand-success; 
     }
-     
 }
