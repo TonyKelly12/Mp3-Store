@@ -25,7 +25,7 @@ const bootstrapConfig = isProd ? bootstrapEntryPoints.prod : bootstrapEntryPoint
 module.exports = {
   context: path.join(__dirname, "src"),
  
-  entry:[bootstrapConfig,"./js/App.js"],
+  entry:[bootstrapConfig,"./js/Index.js"],
   module: {
     rules: [
       {
