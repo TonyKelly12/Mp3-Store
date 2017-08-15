@@ -1,150 +1,121 @@
-/**
- * Created by toned_000 on 3/5/2017.
- */
-
 import React from 'react';
+import image from '../img/cloud-upload-download-data-transfer.svg';
+import Collapsible from './Collapsible';
 
-export class App extends React.Component {
-    //constructor and super should alwasy pass props
+class App extends React.Component {
+
     constructor(props) {
         super(props);
-        //list of items
         this.state = {
-            buyItems: ['milk', 'bread', 'fruit']
+            isLoading: true,
+            contacts: []
         }
     }
-    //Method to add item
-    addItem(e) {
-        //keeps page from refreshing
-        e.preventDefault();
-        //gets current list of items
-        const {buyItems} = this.state;
-        //sets the value of new item to whats being input in the list
-        const newItem = this.newItem.value;
-        //Validates if item is on list
-        const isOnList = buyItems.includes(newItem);
 
-        //valadation statement to make sure form not emapty
-        if (isOnList) {
-            this.setState({message: 'This item is already on the list.'})
-        } else {
-            newItem !== '' && this.setState({
-                //the ... spreads out the already existing items
-                buyItems: [
-                    ...this.state.buyItems,
-                    newItem
-                ],
-                //adds a message to the state
-                message: ""
-            })
-        }
-        this
-            .addForm
-            .reset();
-    }
-
-    removeItem(item) {
-        // this.state.buyItems gets old state .filter loops through each item as buyItem
-        // and compares with return statement
-        const newBuyItems = this
-            .state
-            .buyItems
-            .filter(buyItem => {
-                // the return statement only returns the item if it does not match the (item)
-                // clicked
-                return buyItem !== item;
-            })
-        //this sets the state of buyItems to newBuyItems. **varaible is still buyItems**
-        this.setState({
-            buyItems: [...newBuyItems]
+    componentWillMount() {
+        //this line checks to see if contacts is in local storage if so....
+        localStorage.getItem('contacts') && this.setState({
+            //this line parses the json thats in local storage and sets it to contacts
+            contacts:JSON.parse(localStorage.getItem('contacts')),
+            //sets this is loading animation to false
+            isLoading: false
         })
+    }
 
-        // this if statement checks to see if there are no items on list if so it
-        // displays empty list message
-        if (newBuyItems.length === 0) {
-            this.setState({message: "No Items left in the list. Add Some!"})
-
+    componentDidMount() {
+        //checks if contactsDate is in local storager
+        const date = localStorage.getItem("contactsDate");
+        //Will get current time from loacal storage and place in contactsDate
+        const contactsDate = date && new Date(parseInt(date));
+        //creates a time stamp of right now
+        const now = new Date();
+        // takes the date of ow and subtracts from local storage date to come up with 
+        // age then converts to minutes (1000 * 60) and sets to dataAge
+        const dataAge = Math.round((now - contactsDate) / (1000 * 60));
+        //IF dataAge is grater than 10min tooOLd will return true
+        const tooOld = dataAge >= 10;
+        
+        //AS componentWillMount runs first, must run if statement to see if...
+        //contacts exist and if greater than 15 min in local storage
+        if (tooOld){
+          this.fetchData();  
+        }else{
+            console.log("using data from local storage that is " + dataAge + " minutes old")
         }
-
+        
     }
 
-    clearAll() {
-        this.setState({buyItems: [], message: "No Items Left you cleared them all out"})
+    fetchData() {
+        this.setState({
+            isLoading: true,
+            contacts: []
+        })
+        //sends the call to the api    
+        fetch('https://randomuser.me/api/?results=50&nat=us,dk,fr,gb')
+        //returns response in json
+        .then(response => response.json())
+        //parses the json in this case json returns objects as users
+        // this line maps out the properties of each user object and returns data needed
+        .then(parsedJSON => parsedJSON.results.map(user =>(
+            {
+                name: `${user.name.first} ${user.name.last}`,
+                username: `${user.login.username}`,
+                email: `${user.email}`,
+                location: `${user.location.street}, ${user.location.city}`
+            }
+        )))
+        //this line of code sets the group of users as a contacts object 
+        .then(contacts => this.setState({
+            contacts,
+            isLoading: false
+        }))
+        //if a error is thrown it will catch the error and log it
+        .catch(error => console.log('parsing failed', error))
     }
+
+componentWillUpdate(nextProps, nextState)  {
+    //takes the contacts list and stores in local sstorage
+    localStorage.setItem('contacts', JSON.stringify(nextState.contacts));
+    //adds the Time and date item to the local storage used to calculate how old the data is
+    localStorage.setItem("contactsDate", Date.now());
+}
+
+
     render() {
-        const {buyItems, message} = this.state
+        //the below const makes it to where i can use contact and isLoading
+        const {isLoading, contacts} = this.state;
         return (
             <div>
                 <header>
-                    <h1>Shopping List</h1>
-
-                    <form
-                        ref={input => this.addForm = input}
-                        className="form-inline"
-                        onSubmit={(e) => {
-                        this.addItem(e)
-                    }}>
-                        <div className="form-group">
-                            <label htmlFor="newItemInput" className="sr-only">Add New Item</label>
-                            <input
-                                ref={input => this.newItem = input}
-                                type="text"
-                                placeholder='Bread'
-                                className="form-control"
-                                id='newItemInput'/>
-                        </div>
-                        <button type='submit' className="btn btn-primary">Add</button>
-                    </form>
+                    <img src={image}/>
+                    <h1>Fetching Data
+                        <button className="btn btn-sm btn-danger" onClick={(e) =>{
+                            this.fetchData();
+                        }}>Fetch now</button>
+                    </h1>
                 </header>
-
-                <div className="content">
-                    {(message !== '' || buyItems === 0) && <p className='message text-danger'>{message}</p>}
-
-                    {buyItems.length > 0 && <table className="table">
-                        <caption>Optional tabel Caption</caption>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Item</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            {buyItems.map(item => {
-                                // each item needs a key that is unique if repeated item is added this return
-                                // statement wouldnt work
-                                return (
-                                    <tr key={item}>
-                                        <th scope='row'>1</th>
-                                        <td>{item}</td>
-                                        <td>
-                                            <button
-                                                onClick={(e) => this.removeItem(item)}
-                                                type='button'
-                                                className="btn btn-default btn-sm">
-                                                Remove
-                                            </button>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colSpan='2'>&nbsp;</td>
-                                <td className="text-right">
-                                    <button onClick={(e) => this.clearAll()} className="btn btn-default btn-sm">Clear List</button>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-}
+                <div className={`content ${isLoading ? 'is-loading' : ''}`}>
+                    <div className="panel-group">
+                    {
+                        !isLoading && contacts.length > 0 ? contacts.map(contact => {
+                            //the below const makes it to where i dont have to use contact.username etc...
+                            //I can just use {username}
+                            const {username, name, email, location} = contact;
+                            return <Collapsible key={username} title={name}>
+                            <p>{email}<br/>{location}</p>
+                        </Collapsible>
+                        }) : null
+                        
+                    }   
+                    </div>
+                    <div className="loader">
+                    <div className="icon">
+                    </div>
+                    </div>
                 </div>
+                
             </div>
-        )
+        );
     }
 }
-
-//Validation
+export default App;
