@@ -50,7 +50,7 @@ class App extends React.Component {
             isLoading: true,
             contacts: []
         })
-        //sends the call to the api    
+        //sends the call to the api change to send a call to node server   
         fetch('https://randomuser.me/api/?results=50&nat=us,dk,fr,gb')
         //returns response in json
         .then(response => response.json())
@@ -83,11 +83,12 @@ componentWillUpdate(nextProps, nextState)  {
 
     render() {
         //the below const makes it to where i can use contact and isLoading
+        //TODO: fix the problem with the header image not loading the replace svg as needed
         const {isLoading, contacts} = this.state;
         return (
             <div>
                 <header>
-                    <img src={image}/>
+                    <img src={image}/> 
                     <h1>Fetching Data
                         <button className="btn btn-sm btn-danger" onClick={(e) =>{
                             this.fetchData();
