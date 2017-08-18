@@ -1,11 +1,13 @@
 /**
  * Created by toned_000 on 5/28/2017.
  */
-var mongoose = require('mongoose');
+var gstore = require('gstore-node');
 var bcrypt = require('bcryptjs');
 
+
+const Schema =gstore.Schema;
 // User Schema
-var UserSchema = mongoose.Schema({
+var UserSchema = new Schema({
     username: {
         type: String,
         index:true
@@ -21,7 +23,7 @@ var UserSchema = mongoose.Schema({
     }
 });
 
-var User = module.exports = mongoose.model('User', UserSchema);
+var User = module.exports = gstore.model('User', UserSchema);
 
 module.exports.createUser = function(newUser, callback){
     bcrypt.genSalt(10, function(err, salt) {
