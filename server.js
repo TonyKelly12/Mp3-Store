@@ -15,15 +15,16 @@ const formi = require('formidable');
      //Google Data store connection
      // Authentication is automatic
      // inside Google Compute Engine.
+const gstore = require('gstore-node');
 const datastore = require('@google-cloud/datastore')({
     projectId: 'react-store',
 });
-const gstore = require('gstore-node');
+
 
 // Then connect gstore to the datastore
 gstore.connect(datastore);
 const gcs = require('@google-cloud/storage');
-const compute = require('@google-cloud/compute');
+const gce = require('@google-cloud/compute');
 
     //below are the buckets for the gcs google storage
 //const backups = gcs.bucket('backups');
@@ -38,7 +39,7 @@ const compute = require('@google-cloud/compute');
 
 //File path to routes js files
 var music = require('./src/routes/instrumentals');
-
+var admin = require('./src/routes/users')
 //Init App
 var app = express();
 
@@ -103,6 +104,7 @@ app.use(function (req, res, next) {
 
 
 app.use('/', music);
+app.use('/admin', admin)
 
 
 app.get('/', function (req,res) {

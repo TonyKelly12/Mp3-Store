@@ -9,45 +9,57 @@ const Schema =gstore.Schema;
 // User Schema
 var InstrumentalSchema = new Schema({
     
-    Beatkey:{
-        type:String,
-        index: true
+    beatKey:{
+        type: 'string',
+        required: true
     },
     
-    Catlog:{
-        type:String,
+    catlog:{
+        type: 'string',
     }, 
     
-    Mp3:{
-        type:String,
+    mp3:{
+        type: 'object',
+        required: true
     }, 
     
-    Wav:{
-        type:String,
+    wav:{
+        type:'string',
     }, 
     
-    Price:{
-        type:Number,
+    price:{
+        type:'double',
+        required: true
     }, 
     
-    Contract:{
-        type:String,
+    contract:{
+        type:'object',
+        optional: true
     } ,
     
-    OwnerId:{
-        type: Number,
+    ownerId:{
+        type: 'int',
+        required: true
     },
     
     owenrName:{
-        type:String,
+        type:'string',
+        required: true
     } ,
     
-    Available:{
-        type:Boolean,
+    available:{
+        type:'boolean',
+        required: true
     }, 
     
-    Exclusive:{
-        type:Boolean,
+    exclusive:{
+        type:'boolean',
+        required: true
+    },
+    createdOn: { 
+        type: 'datetime', 
+        default: gstore.defaultValues.NOW ,
+        required: true
     },
 
 });

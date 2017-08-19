@@ -6,7 +6,7 @@ var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-var User = require('../models/user');
+var User = require('../../models/User');
 
 // Register
 router.get('/register', function(req, res){
@@ -29,7 +29,8 @@ router.post('/register', function(req, res){
     var password = req.body.password;
     var password2 = req.body.password2;
 
-    // Validation
+    // Validation using body parser to check html fields posted
+    // first param is var second is error message
     req.checkBody('rName', 'Name is required').notEmpty();
     req.checkBody('email', 'Email is required').notEmpty();
     req.checkBody('email', 'Email is not valid').isEmail();
@@ -44,20 +45,21 @@ router.post('/register', function(req, res){
             errors:errors
         });
     } else {
+        //Creates new user
         var newUser = new User({
             name: rName,
             email:email,
             username: username,
             password: password
         });
-
+        //passes newUser to the createUser function which generates a hashed salted pwrd
         User.createUser(newUser, function(err, user){
             if(err) throw err;
             console.log(user);
         });
-
+        //success message
         req.flash('success_msg', 'You are registered and can now login');
-
+        //redirects admin to login
         res.redirect('/users/login');
     }
 });

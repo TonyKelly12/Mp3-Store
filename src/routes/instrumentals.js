@@ -5,7 +5,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var gstore = require('gstore-node');
-var User = require('../../models/user');
+var User = require('../../models/Instrumental');
 
 
 passport.deserializeUser(function (id, done) {
@@ -28,6 +28,7 @@ router.get('/', function (req, res) {
    
 var userId = "test 123";
     console.log(userId);
+    res.send ("It Works");
  
 });
 

@@ -9,22 +9,34 @@ const Schema =gstore.Schema;
 // User Schema
 var UserSchema = new Schema({
     username: {
-        type: String,
-        index:true
+        type: 'string',
+        required: true
+
     },
     password: {
-        type: String
+        type: 'string',
+        required: true
     },
     email: {
-        type: String
+        type: 'string',
+        validate: 'isEmail',
+        required: true
     },
     name: {
-        type: String
-    }
+        type: 'string',
+        required: true
+    },
+    createdOn: { 
+        type: 'datetime', 
+        default: gstore.defaultValues.NOW,
+        required: true 
+    },
 });
 
 var User = module.exports = gstore.model('User', UserSchema);
 
+
+//generates hased password for the newUser that was created
 module.exports.createUser = function(newUser, callback){
     bcrypt.genSalt(10, function(err, salt) {
         bcrypt.hash(newUser.password, salt, function(err, hash) {
