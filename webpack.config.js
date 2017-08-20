@@ -76,7 +76,8 @@ module.exports = {
     contentBase: path.join(__dirname, "dist"),
     compress: true,
     port: 8080,
-    stats: "errors-only"
+    stats: "errors-only",
+    historyApiFallback: true
   },
   plugins: [
 

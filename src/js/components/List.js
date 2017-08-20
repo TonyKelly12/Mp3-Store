@@ -1,5 +1,5 @@
 import React from 'react';
-import image from '../img/cloud-upload-download-data-transfer.svg';
+import image from '../../img/cloud-upload-download-data-transfer.svg';
 import Collapsible from './Collapsible';
 
 class List extends React.Component {
@@ -102,13 +102,15 @@ componentWillUpdate(nextProps, nextState)  {
                             //the below const makes it to where i dont have to use contact.username etc...
                             //I can just use {username}
                             const {username, name, email, location} = contact;
+                            //adds the collapsible component 
                             return <Collapsible key={username} title={name}>
                             <p>{email}<br/>{location}</p>
                         </Collapsible>
                         }) : null
-                        
+                    //below is the loader animation that displays waiting for data to be recived from api    
                     }   
                     </div>
+                    
                     <div className="loader">
                     <div className="icon">
                     </div>

@@ -69,7 +69,6 @@
     "react-addons-test-utils": "^15.6.0",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.6",
-    "react-router": "^4.1.2",
     "react-router-dom": "^4.1.2",
     "react-transform-hmr": "^1.0.4",
     "redux": "^3.7.2",
@@ -89,7 +88,8 @@
   "dependencies": {
     "gstore-node": "^1.3.1",
     "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "redux-form": "^7.0.3"
   },
   "repository": {
     "type": "git",
