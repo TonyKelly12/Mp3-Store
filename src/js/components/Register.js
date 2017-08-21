@@ -1,58 +1,94 @@
 import React from 'react';
-import {Field, reduxForm} from 'redux-form'
+import {Field, reduxForm, Form} from 'redux-form'
 
-class Register extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: ''
-        };
+const renderField = ({ input, label, type, meta: { touched, error, warning } }) => {
+    console.log(input)
+    return (
+        <div className="input-row">
+      <label>{label}</label>
+      <div>
+      <input {...input} placeholder={label} type={type} />
+      {touched && (error && <Message error>{error}</Message>)}
+        </div>
+    </div>
+  )}
 
-        this.handleChange = this
-            .handleChange
-            .bind(this);
-        this.handleSubmit = this
-            .handleSubmit
-            .bind(this);
-    }
-
-    handleChange(event) {
-        this.setState({value: event.target.value});
-    }
-
-    handleSubmit(event) {
-        alert('A name was submitted: ' + this.state.value);
-        event.preventDefault();
-    }
-
-    render() {
+const Register = props => {
+    const { handleSubmit, pristine, reset, submitting } = props
+    
         return (
-            <form onSubmit={this.handleSubmit}>
-                <label>
-                    Name:
-                    <input type="text" value={this.state.value} onChange={this.handleChange}/>
-                </label>
-                <label>
-                    Username:
-                    <input type="text" value={this.state.value} onChange={this.handleChange}/>
-                </label>
-                <label>
-                    Email:
-                    <input type="text" value={this.state.value} onChange={this.handleChange}/>
-                </label>
-                <label>
-                    Password:
-                    <input type="text" value={this.state.value} onChange={this.handleChange}/>
-                </label>
-                <label>
-                    Confirm Password:
-                    <input type="text" value={this.state.value} onChange={this.handleChange}/>
-                </label>
+            <form onSubmit={handleSubmit}>
+                
+                <div>
+                <Field
+                  name="firstName"
+                  component={renderField}
+                  type="text"
+                  label='First Name'
+                  
+                />
+              </div>
+                
+                
+                <div>
+                <Field
+                  name="lastName"
+                  component={renderField}
+                  type="text"
+                  label='Last Name'
+                  
+                />
+              </div>
+                
+                <div>
+                <Field
+                  name="userName"
+                  component={renderField}
+                  type="text"
+                  label='Username'
+                  
+                />
+              </div>
+                
+                
+                <div>
+                <Field
+                  name="email"
+                  component={renderField}
+                  type="email"
+                  label='Email'
+                 
+                />
+              </div>
+                
+               
+                <div>
+                <Field
+                  name="password"
+                  component={renderField}
+                  type="password"
+                  label='Password'
+                  
+                />
+              </div>
+                
+                
+                <div>
+                <Field
+                  name="confirmPassword"
+                  component={renderField}
+                  type="password"
+                  label='Confirm Password'
+                  
+                />
+              </div>
+                
                 <input type="submit" value="Submit"/>
             </form>
         );
     }
-}
+
 export default reduxForm({
-    form: 'register',
+    form: 'Register',
+    
     }) (Register);

@@ -1,51 +1,54 @@
 import React from 'react';
 import {Field, reduxForm} from 'redux-form'
+import submit from '../actions/formActions/submit'
 
-class Login extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: ''
-        };
+const renderField = ({ input, label, type, meta: { touched, error } }) =>
+  <div>
+    <label>
+      {label}
+    </label>
+    <div>
+      <input {...input} placeholder={label} type={type} />
+      {touched &&
+        error &&
+        <span>
+          {error}
+        </span>}
+    </div>
+  </div>
 
-        this.handleChange = this
-            .handleChange
-            .bind(this);
-        this.handleSubmit = this
-            .handleSubmit
-            .bind(this);
-    }
-
-    handleChange(event) {
-        this.setState({value: event.target.value});
-    }
-
-    handleSubmit(event) {
-        alert('A name was submitted: ' + this.state.value);
-        event.preventDefault();
-    }
-
-    render() {
-        return (
-            <form onSubmit={this.handleSubmit}>
-                <label>
-                    Username:
-                    <input type="text" value={this.state.value} onChange={this.handleChange}/>
-                </label>
-                <label>
-                    Email:
-                    <input type="text" value={this.state.value} onChange={this.handleChange}/>
-                </label>
-                <label>
-                    Password:
-                    <input type="text" value={this.state.value} onChange={this.handleChange}/>
-                </label>
-
-                <input type="submit" value="Submit"/>
-            </form>
-        );
-    }
-}
-export default reduxForm({
-    form: 'login',
-    }) (Login);
+const Login = props => {
+    const { error, handleSubmit, pristine, reset, submitting } = props
+    return (
+      <form onSubmit={handleSubmit(submit)}>
+        <Field
+          name="username"
+          type="text"
+          component={renderField}
+          label="Username"
+        />
+        <Field
+          name="password"
+          type="password"
+          component={renderField}
+          label="Password"
+        />
+        {error &&
+          <strong>
+            {error}
+          </strong>}
+        <div>
+          <button type="submit" onClick={submitting}>
+            Log In
+          </button>
+          <button type="button" onClick={pristine || submitting} onClick={reset}>
+            Clear Values
+          </button>
+        </div>
+      </form>
+    )
+  }
+  
+  export default reduxForm({
+    form: 'Login' // a unique identifier for this form
+  })(Login)
