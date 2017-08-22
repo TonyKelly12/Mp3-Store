@@ -19,15 +19,13 @@ const renderField = ({ input, label, type, meta: { touched, error } }) =>
 class Login extends React.Component {
     constructor(props){
       super(props);
-      this.submit = (values) => {
-        console.log(values);
-      }
+      
     }
 
      render() {
  
          return (
-      <form onSubmit={this.props.handleSubmit(this.submit)}>
+      <form onSubmit={this.props.handleSubmit(loginSubmit)}>
         <Field
           name="username"
           type="text"

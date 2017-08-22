@@ -8,46 +8,45 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var User = require('../../models/User');
 
-// Register
-router.get('/register', function(req, res){
-    res.render('register');
-});
-
-// Login
 router.get('/login', function(req, res){
-    res.render('login');
+    res.json({register: 'login working correctly'})
 });
 
-
-
-
+router.get('/register', function(req, res){
+    res.json({register: 'register working correctly'})
+});
 // Register User
 router.post('/register', function(req, res){
-    var rName = req.body.rName;
+    //this gets all the fields from the register request and runs 
+    //validation on them
+    var firstName = req.body.firstName;
+    var lastName = req.body.lastName;
     var email = req.body.email;
     var username = req.body.username;
     var password = req.body.password;
-    var password2 = req.body.password2;
+    var confirmPassword = req.body.password2;
 
     // Validation using body parser to check html fields posted
     // first param is var second is error message
-    req.checkBody('rName', 'Name is required').notEmpty();
+    req.checkBody('firstName', 'First name is required').notEmpty();
+    req.checkBody('lastName', 'Last name is required').notEmpty();
     req.checkBody('email', 'Email is required').notEmpty();
     req.checkBody('email', 'Email is not valid').isEmail();
     req.checkBody('username', 'Username is required').notEmpty();
     req.checkBody('password', 'Password is required').notEmpty();
-    req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
+    req.checkBody('confirmPassword', 'Passwords do not match').equals(req.body.password);
 
     var errors = req.validationErrors();
 
     if(errors){
-        res.render('register',{
-            errors:errors
-        });
-    } else {
+        // TODO: connect correct errors to react layout
+        res.send(errors)
+        }
+    else {
         //Creates new user
         var newUser = new User({
-            name: rName,
+            firstName: firstName,
+            lastName: lastName,
             email:email,
             username: username,
             password: password
@@ -58,9 +57,9 @@ router.post('/register', function(req, res){
             console.log(user);
         });
         //success message
-        req.flash('success_msg', 'You are registered and can now login');
-        //redirects admin to login
-        res.redirect('/users/login');
+        res.json({success_msg: 'You are registered and can now login'});
+        
+      
     }
 });
 
@@ -94,12 +93,14 @@ passport.deserializeUser(function(id, done) {
     });
 });
 
+// login function
 router.post('/login',
     passport.authenticate('local', {successRedirect:'/', failureRedirect:'/users/login',failureFlash: true}),
     function(req, res) {
         res.redirect('/');
     });
 
+// Logout Function
 router.get('/logout', function(req, res){
     req.logout();
 

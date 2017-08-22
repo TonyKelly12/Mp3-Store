@@ -38,8 +38,8 @@ const gce = require('@google-cloud/compute');
 
 
 //File path to routes js files
-var music = require('./src/routes/instrumentals');
-var admin = require('./src/routes/users')
+
+var admin = require('./src/node-routes/users')
 //Init App
 var app = express();
 
@@ -88,7 +88,7 @@ app.use(expressValidator({
     }
 }));
 
-//Connect Flash
+/*Connect Flash
 app.use(flash());
 
 //Flash global Vars
@@ -100,10 +100,10 @@ app.use(function (req, res, next) {
     next();
 
 });
+*/
 
 
 
-app.use('/', music);
 app.use('/admin', admin)
 
 

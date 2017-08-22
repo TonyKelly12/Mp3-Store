@@ -1,6 +1,28 @@
 import React from 'react';
 import {Field, reduxForm, Form} from 'redux-form'
-import registerAdmin from '../actions/formActions/registerAdmin'
+
+import { SubmissionError } from 'redux-form'
+
+function saveAdmin() {
+  return fetch('https://mywebsite.com/endpoint/', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      firstParam: 'yourValue',
+      secondParam: 'yourOtherValue',
+    })
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return responseJson;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
 
 const renderField = ({
   input,
@@ -17,7 +39,7 @@ const renderField = ({
     <div className="input-row">
       <label>{label}</label>
       <div>
-        <input {...input} placeholder={label} type={type}/> {touched && (error && <Message error>{error}</Message>)}
+        <input {...input} placeholder={label} type={type}/> {touched && (error && <div className="error">{error}</div>)}
       </div>
     </div>
   )
@@ -28,8 +50,48 @@ class Register extends React.Component {
   
   constructor(props){
     super(props);
-    this.submit = (values) => {
-      console.log(values);
+    this.submit = ({firstName='', lastName='', username='', email='', password='', confirmPassword=''}) => {
+     
+      //VALIDATION SECTION
+      let error = {};
+      let isError = false;
+
+      if (firstName.trim() ===''){
+        error.firstName = 'First name isRequired';
+        isError = true;
+      }
+      if (lastName.trim() ===''){
+        error.lastName = 'Last Name Required';
+        isError = true;
+      }
+      if (username.trim() ===''){
+        error.username = 'Username is Required';
+        isError = true;
+      }
+      if (email.trim() ===''){
+        error.email = 'Email is Required';
+        isError = true;
+      }
+      if (password.trim() != confirmPassword.trim()){
+        error.password = 'Passwords do not match';
+        error.confirmPassword = 'Passwords do not match';
+        isError = true;
+      }
+      if (isError){
+        throw new SubmissionError(error);
+      } else {
+        //submit form to server
+        return saveAdmin({firstName, lastName, username, email, password})
+        .then (data => {
+          if (data.error){
+            throw new SubmissionError(data.error);
+        }else{
+          console.log('User has been added');
+        }
+        });
+      }
+      
+      
     }
   }
   
@@ -58,7 +120,7 @@ class Register extends React.Component {
 
         <div>
           <Field
-            name="userName"
+            name="username"
             component={renderField}
             type="text"
             label='Username'
