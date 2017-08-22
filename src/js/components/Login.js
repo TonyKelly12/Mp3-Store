@@ -1,6 +1,6 @@
 import React from 'react';
-import {Field, reduxForm} from 'redux-form'
-import submit from '../actions/formActions/submit'
+import {Field, reduxForm, propTypes} from 'redux-form'
+import loginSubmit from '../actions/formActions/login'
 
 const renderField = ({ input, label, type, meta: { touched, error } }) =>
   <div>
@@ -16,11 +16,18 @@ const renderField = ({ input, label, type, meta: { touched, error } }) =>
         </span>}
     </div>
   </div>
+class Login extends React.Component {
+    constructor(props){
+      super(props);
+      this.submit = (values) => {
+        console.log(values);
+      }
+    }
 
-const Login = props => {
-    const { error, handleSubmit, pristine, reset, submitting } = props
-    return (
-      <form onSubmit={handleSubmit(submit)}>
+     render() {
+ 
+         return (
+      <form onSubmit={this.props.handleSubmit(this.submit)}>
         <Field
           name="username"
           type="text"
@@ -33,22 +40,17 @@ const Login = props => {
           component={renderField}
           label="Password"
         />
-        {error &&
-          <strong>
-            {error}
-          </strong>}
-        <div>
-          <button type="submit" onClick={submitting}>
-            Log In
-          </button>
-          <button type="button" onClick={pristine || submitting} onClick={reset}>
-            Clear Values
-          </button>
+       
+        <div>  
+        <input type="submit" value="Login"/>
+          
+         
+        
         </div>
       </form>
     )
   }
-  
+}
   export default reduxForm({
-    form: 'Login' // a unique identifier for this form
+    form: 'Login', // a unique identifier for this form
   })(Login)

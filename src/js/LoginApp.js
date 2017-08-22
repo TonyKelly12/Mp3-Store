@@ -6,7 +6,14 @@ import UserList from './containers/userContainers/user-list';
 import UserDetail from './containers/userContainers/user-detail'
 require('../Sass/main.scss')
 
-const RegisterApp = ({match}) => (
+class LoginApp extends React.Component {
+    //const {handleSubmit, pristine, reset, submitting} = props
+    
+  
+    
+    
+    render() {
+        return(
        <div>   
     <h1>React Store</h1>
    
@@ -17,5 +24,6 @@ const RegisterApp = ({match}) => (
     
     </div> 
 );
-
-export default RegisterApp;
+    }
+}
+export default LoginApp;
