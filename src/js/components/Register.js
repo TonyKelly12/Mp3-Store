@@ -3,17 +3,15 @@ import {Field, reduxForm, Form} from 'redux-form'
 
 import { SubmissionError } from 'redux-form'
 
-function saveAdmin() {
-  return fetch('https://mywebsite.com/endpoint/', {
+function saveAdmin(data) {
+  return fetch('http://localhost:9000/admin/register', {
     method: 'POST',
+    mode: 'cors',
     headers: {
-      'Accept': 'application/json',
+      
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      firstParam: 'yourValue',
-      secondParam: 'yourOtherValue',
-    })
+    body: JSON.stringify(data)
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -81,14 +79,10 @@ class Register extends React.Component {
         throw new SubmissionError(error);
       } else {
         //submit form to server
-        return saveAdmin({firstName, lastName, username, email, password})
+        return saveAdmin({firstName, lastName, username, email, password, confirmPassword})
         .then (data => {
-          if (data.error){
-            throw new SubmissionError(data.error);
-        }else{
-          console.log('User has been added');
-        }
-        });
+          console.log(data)
+        }); ;
       }
       
       

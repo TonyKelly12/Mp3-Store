@@ -8,6 +8,14 @@ var bcrypt = require('bcryptjs');
 const Schema =gstore.Schema;
 // User Schema
 var UserSchema = new Schema({
+    firstName: {
+        type: 'string',
+        required: true
+    },
+    lastName:{
+        type: 'string',
+        required: true
+    },
     username: {
         type: 'string',
         required: true
@@ -22,10 +30,7 @@ var UserSchema = new Schema({
         validate: 'isEmail',
         required: true
     },
-    name: {
-        type: 'string',
-        required: true
-    },
+    
     createdOn: { 
         type: 'datetime', 
         default: gstore.defaultValues.NOW,
