@@ -63,6 +63,14 @@ const renderField = ({ input, label, type, meta: { touched, error } }) =>
           return loginAdmin({username, password})
           .then (data => {
             console.log(data)
+            const authKey = data.entityKey.id;
+            const user = data.entityData;
+            const admin = {
+                  user: user,
+                  authKey: authKey
+            }
+            console.log(admin);
+            localStorage.setItem("admin", admin);
           }); ;
         }
         
