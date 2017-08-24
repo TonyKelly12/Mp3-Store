@@ -80,7 +80,9 @@ passport.use(new LocalStrategy(
             User.comparePassword(password, user.password, function(err, isMatch){
                 if(err) throw err;
                 if(isMatch){
-                    console.log(user);
+                    console.log("Below is the console logging the user");
+                    console.log(user.entityKey.id);
+                    console.log("above is the user below is the error");
                     return done(null, user);
                     
                 } else {
@@ -93,7 +95,8 @@ passport.use(new LocalStrategy(
 
 // Writing user section
 passport.serializeUser(function(user, done) {
-    done(null, user.id);
+    console.log("Log in worked")
+    done(null, user.entityKey.id);
 });
 // reading from user session
 passport.deserializeUser(function(id, done) {
