@@ -96,22 +96,26 @@ passport.use(new LocalStrategy(
 // Writing user section
 passport.serializeUser(function(user, done) {
     console.log("Log in worked")
-    done(null, user.entityKey.id);
+    return done(null, user.entityKey.id);
 });
 // reading from user session
 passport.deserializeUser(function(id, done) {
     User.getUserById(id, function(err, user) {
+        console.log("deserialized is being ran");
         done(err, user);
     });
 });
 
 // login function
 router.post('/login',
-   passport.authenticate('local'),
-    function(req, res) {
+   passport.authenticate('local' ),
+    function(req, res, user) {
+    // sends user data back to application
+        res.json(req.user);
+            
+    }
         
-        res.json({login_msg: 'You are logged in'});
-    });
+    );
 
 // Logout Function
 router.get('/logout', function(req, res){

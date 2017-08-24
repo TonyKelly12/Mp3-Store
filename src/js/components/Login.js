@@ -1,6 +1,6 @@
 import React from 'react';
 import {Field, reduxForm, propTypes} from 'redux-form'
-
+import {browserHistory} from 'react-router';
 import { SubmissionError } from 'redux-form'
 function loginAdmin(data) {
   return fetch('http://localhost:9000/admin/login', {
