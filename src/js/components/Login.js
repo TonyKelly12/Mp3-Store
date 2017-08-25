@@ -1,7 +1,14 @@
 import React from 'react';
-import {Field, reduxForm, propTypes} from 'redux-form'
+import {Field, reduxForm, propTypes} from 'redux-form';
 import {browserHistory} from 'react-router';
-import { SubmissionError } from 'redux-form'
+import { SubmissionError } from 'redux-form';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+//import {loginAdmin} from '../actions/formActions/login';
+
+import {authAdmin} from '../actions/formActions/authAdmin';
+
+
 function loginAdmin(data) {
   return fetch('http://localhost:9000/admin/login', {
     method: 'POST',
@@ -19,7 +26,7 @@ function loginAdmin(data) {
     .catch((error) => {
       console.error(error);
     });
-}
+} 
 
 
 const renderField = ({ input, label, type, meta: { touched, error } }) =>
@@ -67,10 +74,11 @@ const renderField = ({ input, label, type, meta: { touched, error } }) =>
             const user = data.entityData;
             const admin = {
                   user: user,
-                  authKey: authKey
+                  authKey: authKey,
+                  authStatus: true
             }
             console.log(admin);
-            localStorage.setItem("admin", admin);
+            return authAdmin (admin);
           }); ;
         }
         
@@ -105,6 +113,18 @@ const renderField = ({ input, label, type, meta: { touched, error } }) =>
     )
   }
 }
-  export default reduxForm({
+
+Login = reduxForm({
     form: 'Login', // a unique identifier for this form
-  })(Login)
+    authAdmin: authAdmin,
+  }, dispatch)(Login)
+
+  const matchDispatchToProps = (dispatch) => {
+    return bindActionCreators({
+      authAdmin: authAdmin, // prop selectUser equals the selectUser function 
+    }, dispatch)
+}
+
+export default connect(matchDispatchToProps)(Login);
+  
+

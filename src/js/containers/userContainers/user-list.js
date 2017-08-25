@@ -29,7 +29,7 @@ class UserList extends Component {
 // this function takes a piece of state and maps it to a property no you can use
 // this.props.users for whole application
 const mapStateToProps = (state, ownProps) => {
-    return {users: state.Users}
+    return {users: state.users}
 }
 // connects functions to redux
 const matchDispatchToProps = (dispatch) => {

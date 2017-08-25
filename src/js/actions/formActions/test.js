@@ -1,8 +1,8 @@
-import { SubmissionError } from 'redux-form'
+/*import { SubmissionError } from 'redux-form'
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-function registerAdmin(values) {
+function loginadmintest(values) {
   // simulate server latency
   return sleep(500).then(() => {
 
@@ -48,3 +48,4 @@ function registerAdmin(values) {
 }
 
 export default registerAdmin
+*/

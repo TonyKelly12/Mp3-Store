@@ -19,7 +19,7 @@ class UserDetail extends Component{
 //maps the state to the activer user selected as  prop user
     const mapStateToProps = (state, ownProps) => {
         return {
-            user: state.ActiveUser 
+            user: state.activeUser 
         }
     }
 
