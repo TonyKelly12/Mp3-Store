@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 //import {loginAdmin} from '../actions/formActions/login';
 
-import {authAdmin} from '../actions/formActions/authAdmin';
+import {authAdmin} from '../actions/formActions/action-authAdmin';
 
 
 function loginAdmin(data) {
@@ -44,47 +44,64 @@ const renderField = ({ input, label, type, meta: { touched, error } }) =>
     </div>
   </div>
 
-  class Login extends React.Component {
-    constructor(props){
-      super(props);
-      this.submit = ({ username='', password=''}) => {
-       
-        //VALIDATION SECTION
-        let error = {};
-        let isError = false;
+class Login extends React.Component {
+  componentDidMount() {
+    // Injected by react-redux:
+   
+  }
   
-      
-        if (username.trim() ===''){
-          error.username = 'Username is Required';
-          isError = true;
-        }
-        
-        if (password.trim() ===''){
-          error.password = 'Passwords Incorrect'; 
-          isError = true;
-        }
-        if (isError){
-          throw new SubmissionError(error);
-        } else {
-          //submit form to server
-          return loginAdmin({username, password})
-          .then (data => {
-            console.log(data)
-            const authKey = data.entityKey.id;
-            const user = data.entityData;
-            const admin = {
-                  user: user,
-                  authKey: authKey,
-                  authStatus: true
-            }
-            console.log(admin);
-            return authAdmin (admin);
-          }); ;
-        }
-        
-        
+  
+  constructor(props) {
+    super(props);
+    this.submit = ({
+      username = '',
+      password = ''
+    }) => {
+
+      //VALIDATION SECTION
+      let error = {};
+      let isError = false;
+
+      if (username.trim() === '') {
+        error.username = 'Username is Required';
+        isError = true;
+      }
+
+      if (password.trim() === '') {
+        error.password = 'Passwords Incorrect';
+        isError = true;
+      }
+      if (isError) {
+        throw new SubmissionError(error);
+      } else {
+        //submit form to server
+        return loginAdmin({username, password}).then(data => {
+          console.log(data)
+          const authKey = data.entityKey.id;
+          const user = data.entityData;
+          const admin = {
+            user: user,
+            authKey: authKey,
+            authStatus: true
+          }
+          console.log(admin);
+          let { dispatch } = this.props
+          
+              // Note: this won't work:
+              // TodoActionCreators.addTodo('Use Redux')
+          
+              // You're just calling a function that creates an action.
+              // You must dispatch the action, too!
+          
+              // This will work:
+              let action = authAdmin(admin,'AUTH_ADMIN')
+              dispatch(action);
+          //bindActionCreators({authAdmin: authAdmin,}, dispatch)
+          
+        });;
       }
     }
+  }
 
      render() {
  
@@ -114,17 +131,13 @@ const renderField = ({ input, label, type, meta: { touched, error } }) =>
   }
 }
 
-Login = reduxForm({
+
+
+
+export default Login = reduxForm({
     form: 'Login', // a unique identifier for this form
-    authAdmin: authAdmin,
-  }, dispatch)(Login)
+    
+  },)(Login)
 
-  const matchDispatchToProps = (dispatch) => {
-    return bindActionCreators({
-      authAdmin: authAdmin, // prop selectUser equals the selectUser function 
-    }, dispatch)
-}
-
-export default connect(matchDispatchToProps)(Login);
   
 

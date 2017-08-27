@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 import {connect} from 'react-redux';
-import {authAdmin} from '../../actions/formActions/authAdmin';
+
 
 class AdminDetail extends Component{
     render(){ 
@@ -11,8 +11,9 @@ class AdminDetail extends Component{
         return(
            //when  prop user is selected render below
             <div>
-                <h2>{this.props.admin.first} {this.props.admin.last}</h2>
-                <h3>{this.props.admin.username}</h3>
+                <h1> Its Reading a User </h1>
+                <h2>{this.props.admin.user.firstName} {this.props.admin.user.lastName}</h2>
+                <h3>{this.props.admin.user.username}</h3>
 
             </div>
         );

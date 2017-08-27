@@ -1,16 +1,15 @@
-import admin from "../../components/Login"
-
-export default function(){
-    const pctiveAdmin = {
-        authKey: admin.authKey,
-        createdOn:admin.createdOn, 
-        email:admin.email,
-        firstName:admin.firstName,
-        lastName:admin.lastName,
-        password:admin.password,
-        username:admin.username,
-        authstatus: false
-    }
-    return pctiveAdmin;
+/*export const authAdmin = (admin) => {
+    console.log(" Auth-n the admin " +  admin);
+    return  activeAdmin = {
+            authKey: admin.authKey,
+            createdOn:admin.createdOn, 
+            email:admin.email,
+            firstName:admin.firstName,
+            lastName:admin.lastName,
+            password:admin.password,
+            username:admin.username,
+            authstatus: true
+        }
     
-}
+}; */
+
