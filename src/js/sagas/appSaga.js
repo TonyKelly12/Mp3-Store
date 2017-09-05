@@ -24,16 +24,25 @@ function loginAdmin(data) {
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 function* callLogin(action) {
    yield put( startSubmit('login'));
+   let error = {};
     const result = yield call(loginAdmin, action.data)
-    if (result.errors) {
-       yield put({type: "USER_FETCH_FAILED", message: e.message});
-       errors = result.errors
+    if (result.error) {
+       yield put({type: "USER_FETCH_FAILED", error: result.error});
+       error = result.error
     } else {
-       yield put({type: "USER_FETCH_SUCCEEDED"});
+        const authKey = result.entityKey.id;
+        const user = result.entityData;
+        const admin = {
+          user: user,
+          authKey: authKey,
+          authStatus: true
+        }
+       yield put({type: "AUTH_ADMIN", payload: admin});
     }
-   yield put(stopSubmit('login',errors));
+   yield put(stopSubmit('login',error));
  }
  
+
  /*
    Starts fetchUser on each dispatched `USER_FETCH_REQUESTED` action.
    Allows concurrent fetches of user.
@@ -41,11 +50,14 @@ function* callLogin(action) {
  function* loginSaga() {
    yield takeEvery("REQUEST_LOGIN", callLogin);
  }
+
+
  
 
  
  export default function* root(){
      yield[
          fork(loginSaga),
+        
      ];
  } 

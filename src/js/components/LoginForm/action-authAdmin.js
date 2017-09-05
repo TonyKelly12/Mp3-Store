@@ -6,3 +6,11 @@
             data,//returns the single user object
         }
     };
+
+    export const setActiveAdmin = (payload) => {
+        console.log(payload)
+         return {
+             type: "SET_ACTIVE_ADMIN", //can named anything you want
+             payload,//returns the single user object
+         }
+     };
