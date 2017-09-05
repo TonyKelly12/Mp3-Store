@@ -73,9 +73,9 @@ passport.use(new LocalStrategy(
         User.getUserByUsername(username, function(err, user){
             if(err) throw err;
             if(!user){
-
-                return done(null, false);
-            }
+                return res.json({error: "No user by that name"});
+                 
+            }else{
 
             User.comparePassword(password, user.password, function(err, isMatch){
                 if(err) throw err;
@@ -87,10 +87,10 @@ passport.use(new LocalStrategy(
                     
                 } else {
                     console.log("Invallid Password");
-                    return done(null, false);
+                    return done(null, false, {message: 'Invalid password'});
                 }
             });
-        });
+        }});
     }));
 
 // Writing user section
@@ -105,18 +105,19 @@ passport.deserializeUser(function(id, done) {
         done(err, user);
     });
 });
-
-// login function
+process.on('unhandledRejection', error => {
+    // Prints "unhandledRejection woops!"
+    console.log("Handling rejected promise in a shitty way for now");
+  });
+// login function 
+//TODO: Fix unhandled promise fro when a user logs in but user exist in database
 router.post('/login',
-   passport.authenticate('local' ),
-    function(req, res, user) {
-    // sends user data back to application
-        res.json(req.user);
-            
-    }
-        
-    );
+passport.authenticate('local'),
 
+function(req, res) {
+    
+    res.json(req.user);
+});
 // Logout Function
 router.get('/logout', function(req, res){
     req.logout();

@@ -22,6 +22,7 @@ const datastore = require('@google-cloud/datastore')({
 
 
 // Then connect gstore to the datastore
+gstore.Promise = global.Promise;
 gstore.connect(datastore);
 const gcs = require('@google-cloud/storage');
 const gce = require('@google-cloud/compute');
@@ -63,6 +64,7 @@ app.use(express.static(path.join(__dirname,'public')));
 app.use(session({
     secret: 'kHX29Q%Pn9AUw&oa',
     saveUninitialized: false,
+    //cookie: { secure: true },
     resave: false
 }));
 
@@ -88,7 +90,7 @@ app.use(expressValidator({
     }
 }));
 
-/*Connect Flash
+//Connect Flash
 app.use(flash());
 
 //Flash global Vars
@@ -100,7 +102,7 @@ app.use(function (req, res, next) {
     next();
 
 });
-*/
+
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -108,7 +110,12 @@ app.use(function(req, res, next) {
     next();
   });
 
+app.use(function(err,req,res,next){
+    console.log(err)
+});
+
 app.use('/admin', admin)
+
 
 
 app.get('/', function (req,res) {

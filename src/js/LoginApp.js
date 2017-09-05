@@ -1,7 +1,7 @@
 import React from 'react';
 
 import AdminDetail from './containers/adminContainer/admin-detail';
-import Login from './components/Login';
+import Login from './components/LoginForm/indexAdmin';
 import UserList from './containers/userContainers/user-list';
 import UserDetail from './containers/userContainers/user-detail';
 require('../Sass/main.scss');

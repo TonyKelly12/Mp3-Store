@@ -33,8 +33,8 @@ const bootstrapConfig = isProd
 module.exports = {
   context: path.join(__dirname, "src"),
 
-  entry: [
-    bootstrapConfig, "./js/Index.js"
+  entry:  [
+    bootstrapConfig, 'babel-polyfill', "./js/Index.js"
   ],
   module: {
     rules: [

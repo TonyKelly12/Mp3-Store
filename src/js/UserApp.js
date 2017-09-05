@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Login from './components/Login';
+import Login from './components/LoginForm/indexAdmin';
 import Register from './components/Register'
 import UserList from './containers/userContainers/user-list';
 import UserDetail from './containers/userContainers/user-detail'
