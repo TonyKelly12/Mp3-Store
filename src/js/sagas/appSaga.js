@@ -1,14 +1,15 @@
 import { call, put, takeEvery, takeLatest, fork } from 'redux-saga/effects';
 import {startSubmit, stopSubmit} from 'redux-form';
+//import loginOptions from '../requestOptions/loginOptions';
+//import loginAuthToken from '../requestOptions/authOptions';
+
+
 
 function loginAdmin(data) {
     return fetch('http://localhost:9000/admin/login', {
       method: 'POST',
       mode: 'cors',
-      headers: {
-        
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data)
     })
       .then((response) => response.json())
@@ -32,7 +33,13 @@ function* callLogin(action) {
     } else {
         //const authKey = result.entityKey.id;
         //const user = result.entityData;
-        const admin = result
+        const admin = result;
+        const adminDetail = result.entityData;
+        const token = result.token;
+        localStorage.setItem('admin', adminDetail);
+        localStorage.setItem('jwtToken', token);
+        //TODO: fix below function to set headers for future request
+        //loginAuthToken(token);
        yield put({type: "AUTH_ADMIN", payload: admin});
     }
    yield put(stopSubmit('login',error));
