@@ -30,13 +30,9 @@ function* callLogin(action) {
        yield put({type: "USER_FETCH_FAILED", error: result.error});
        error = result.error
     } else {
-        const authKey = result.entityKey.id;
-        const user = result.entityData;
-        const admin = {
-          user: user,
-          authKey: authKey,
-          authStatus: true
-        }
+        //const authKey = result.entityKey.id;
+        //const user = result.entityData;
+        const admin = result
        yield put({type: "AUTH_ADMIN", payload: admin});
     }
    yield put(stopSubmit('login',error));

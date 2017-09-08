@@ -12,8 +12,8 @@ class AdminDetail extends Component{
            //when  prop user is selected render below
             <div>
                 <h1> Its Reading a User </h1>
-                <h2>{this.props.admin.user.firstName} {this.props.admin.user.lastName}</h2>
-                <h3>{this.props.admin.user.username}</h3>
+                <h2>{this.props.admin.entityData.firstName} {this.props.admin.entityData.lastName}</h2>
+                <h3>{this.props.admin.entityData.username}</h3>
 
             </div>
         );

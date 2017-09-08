@@ -62,6 +62,7 @@ app.use(express.static(path.join(__dirname,'public')));
 
 //Express Session
 app.use(session({
+    // before dist change to var and store else where
     secret: 'kHX29Q%Pn9AUw&oa',
     saveUninitialized: false,
     //cookie: { secure: true },

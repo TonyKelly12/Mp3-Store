@@ -8,6 +8,10 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var User = require('../../models/User');
 
+var jwt = require('jsonwebtoken');
+//TODO: hide secret in different file
+const JWT_SECRET = 'J5bn&vwMW1%vRP1x';
+
 
 
 router.get('/login', function(req, res){
@@ -80,8 +84,12 @@ passport.use(new LocalStrategy(
             User.comparePassword(password, user.password, function(err, isMatch){
                 if(err) throw err;
                 if(isMatch){
-                    console.log("Below is the console logging the user");
-                    console.log(user.entityKey.id);
+                   const token = jwt.sign({
+                       id: user.entityKey.id,
+                       username: user.entityData.username
+                   },JWT_SECRET)
+                   user.token  = token;
+                    console.log(user.token);
                     console.log("above is the user below is the error");
                     return done(null, user);
                     
@@ -115,8 +123,8 @@ router.post('/login',
 passport.authenticate('local'),
 
 function(req, res) {
-    
-    res.json(req.user);
+    req.session.user = req.user;
+    res.json(req.session.user);
 });
 // Logout Function
 router.get('/logout', function(req, res){
