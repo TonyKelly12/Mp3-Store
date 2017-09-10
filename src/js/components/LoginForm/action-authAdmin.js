@@ -14,3 +14,11 @@
              payload,//returns the single user object
          }
      };
+
+     export const logout = () => {
+       
+         return {
+             type: "REQUEST_LOGOUT", //can named anything you want
+             //returns the single user object
+         }
+     };

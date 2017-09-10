@@ -12,6 +12,13 @@ import ListApp from './ListApp';
 import UserApp from './UserApp';
 import RegisterApp from './RegisterApp';
 import LoginApp from './LoginApp';
+
+//Setting Auth Token
+import loginAuthToken from './sagas/appSaga';
+
+loginAuthToken(localStorage.jwtToken)
+
+
 //polyfill to make fetchAPI work in all browser
 require('es6-promise').polyfill();
 require('isomorphic-fetch');

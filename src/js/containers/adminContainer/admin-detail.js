@@ -4,16 +4,22 @@ import {connect} from 'react-redux';
 
 
 class AdminDetail extends Component{
-    render(){ 
+    
+
+    render(){
+        
+        
         if(!this.props.admin){ //If there is no user selected render below
                 return(<h4>Please Log In</h4>);
             }
+             console.log(this.props.admin)
         return(
            //when  prop user is selected render below
             <div>
                 <h1> Its Reading a User </h1>
-                <h2>{this.props.admin.entityData.firstName} {this.props.admin.entityData.lastName}</h2>
-                <h3>{this.props.admin.entityData.username}</h3>
+               
+                <h2>{this.props.admin.admin.email} {this.props.admin.admin.lastName}</h2>
+                <h3>{this.props.admin.admin.username}</h3>
 
             </div>
         );

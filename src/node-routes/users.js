@@ -55,7 +55,8 @@ router.post('/register', function(req, res){
             lastName: lastName,
             email:email,
             username: username,
-            password: password
+            password: password,
+            isAuthenticated: false
         });
         //passes newUser to the createUser function which generates a hashed salted pwrd
         User.createUser(newUser, function(err, user){
@@ -85,8 +86,10 @@ passport.use(new LocalStrategy(
                 if(err) throw err;
                 if(isMatch){
                    const token = jwt.sign({
-                       id: user.entityKey.id,
-                       username: user.entityData.username
+                       //WIll encrypt and data from results and send it over in token
+                       //TODO: figure out what data you want to send over in token or all in
+                       id: user.entityKey,
+                       admin: user.entityData
                    },JWT_SECRET)
                    user.token  = token;
                     console.log(user.token);
@@ -123,11 +126,12 @@ router.post('/login',
 passport.authenticate('local'),
 
 function(req, res) {
-    req.session.user = req.user;
-    res.json(req.session.user);
+   
+    res.json(req.user.token);
 });
 // Logout Function
 router.get('/logout', function(req, res){
+    console.log("logout ran")
     req.logout();
 
     res.json({logout_msg: 'You are logged out'});

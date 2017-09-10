@@ -36,6 +36,11 @@ var UserSchema = new Schema({
         default: gstore.defaultValues.NOW,
         required: true 
     },
+
+    isAuthenticated:{
+        type: 'boolean',
+        required:true
+    }
 });
 
 var User = module.exports = gstore.model('User', UserSchema);

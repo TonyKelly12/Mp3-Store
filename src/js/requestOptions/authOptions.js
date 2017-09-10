@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 
-import authHeader from '../sagas/appSaga'
+import adminHeaders from '../sagas/appSaga'
 
 export default function loginAuthToken(token){
      
     if(token){
-        authHeader.append('Authorized', token);
+        adminHeaders.append('Authorized', token);
       
     } else{
-        authHeader.delete('Authorized');
+        adminHeaders.delete('Authorized');
     }
 }

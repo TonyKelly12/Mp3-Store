@@ -3,13 +3,16 @@ import {startSubmit, stopSubmit} from 'redux-form';
 //import loginOptions from '../requestOptions/loginOptions';
 //import loginAuthToken from '../requestOptions/authOptions';
 
-
+import jwt from 'jsonwebtoken';
+//BElow is setting default header for login request
+var defaultHeader = {'Content-Type': 'application/json'};
+var adminHeaders = new Headers(defaultHeader);
 
 function loginAdmin(data) {
     return fetch('http://localhost:9000/admin/login', {
       method: 'POST',
       mode: 'cors',
-      headers: {'Content-Type': 'application/json'},
+      headers: adminHeaders ,
       body: JSON.stringify(data)
     })
       .then((response) => response.json())
@@ -22,6 +25,33 @@ function loginAdmin(data) {
   } ;
   
 
+  function logoutAdmin() {
+    return fetch('http://localhost:9000/admin/logout', {
+      method: 'POST',
+      mode: 'cors',
+      headers: adminHeaders ,
+      body: JSON.stringify(data)
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        return responseJson;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  } ;
+
+  //Below is adding the authorization header to every new request for authorization pages
+  function loginAuthToken(token){
+    
+   if(token){
+       adminHeaders.append('Authorized', token);
+     
+   } else{
+       adminHeaders.delete('Authorized');
+   }
+}
+
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 function* callLogin(action) {
    yield put( startSubmit('login'));
@@ -33,17 +63,29 @@ function* callLogin(action) {
     } else {
         //const authKey = result.entityKey.id;
         //const user = result.entityData;
-        const admin = result;
-        const adminDetail = result.entityData;
-        const token = result.token;
-        localStorage.setItem('admin', adminDetail);
+        const token = result;
+        const admin = jwt.decode(token);
+        //const adminDetail = result.entityData;
+        admin.isAuthenticated = true;
+        console.log(admin);
+        localStorage.setItem('admin', admin);
         localStorage.setItem('jwtToken', token);
         //TODO: fix below function to set headers for future request
-        //loginAuthToken(token);
+        loginAuthToken(token);
+       
        yield put({type: "AUTH_ADMIN", payload: admin});
     }
    yield put(stopSubmit('login',error));
  }
+ 
+ function* callLogout(action) {
+ localStorage.removeItem('jwtToken', 'admin');
+ loginAuthToken(false);
+  logoutAdmin();
+  
+      
+     
+   }
  
 
  /*
@@ -54,6 +96,9 @@ function* callLogin(action) {
    yield takeEvery("REQUEST_LOGIN", callLogin);
  }
 
+ function* logoutSaga() {
+  yield takeEvery("REQUEST_LOGOUT", callLogout);
+}
 
  
 
@@ -61,6 +106,6 @@ function* callLogin(action) {
  export default function* root(){
      yield[
          fork(loginSaga),
-        
+         fork(logoutSaga),
      ];
  } 
