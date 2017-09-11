@@ -25,24 +25,18 @@ function loginAdmin(data) {
   } ;
   
 
-  function logoutAdmin() {
+  export function logoutAdmin(admin) {
     return fetch('http://localhost:9000/admin/logout', {
-      method: 'POST',
+      method: 'GET',
       mode: 'cors',
       headers: adminHeaders ,
-      body: JSON.stringify(data)
+      body: {}
     })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        return responseJson;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    
   } ;
 
   //Below is adding the authorization header to every new request for authorization pages
-  function loginAuthToken(token){
+   export function loginAuthToken(token){
     
    if(token){
        adminHeaders.append('Authorized', token);
@@ -79,10 +73,15 @@ function* callLogin(action) {
  }
  
  function* callLogout(action) {
- localStorage.removeItem('jwtToken', 'admin');
+   console.log('running remove from local storage')
+
+ localStorage.removeItem('jwtToken');
+ localStorage.removeItem('admin');
  loginAuthToken(false);
   logoutAdmin();
+  console.log('loggingout ');
   
+  yield put({type: "LOGOUT_ADMIN" });
       
      
    }
@@ -97,6 +96,7 @@ function* callLogin(action) {
  }
 
  function* logoutSaga() {
+   console.log('app saga heard dispatch')
   yield takeEvery("REQUEST_LOGOUT", callLogout);
 }
 

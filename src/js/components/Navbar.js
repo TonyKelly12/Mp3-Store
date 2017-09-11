@@ -2,21 +2,34 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {logout}  from './LoginForm/action-authAdmin';
-
+import {bindActionCreators} from 'redux'
 
 class Navbar extends React.Component{
-
+    
     constructor(props) {   
          // fires before component is mounted    
         super(props); 
-        // makes this refer to this component    
-        //this.props.logout = {logout}; // set state  
+      
+        // makes this refer to this component
+      if (!this.props.admin || this.props.admin == {}){
+          this.state = null;
+          this.logout = this.props.logout.bind(this);
+      } else
+        this.state = isAuthenticated;
+        this.logout = this.props.logout.bind(this);   
+    
+    }
+    
+    
+     logout(props){
+         console.log("admin logout " + this.props.admin)
+         props.preventDefault();
+        this.logout(this.props.admin);
     }
 
-
     render(){
-        console.log(this.props.admin); 
-        if (!this.props.admin){       
+        console.log('is authenticated ' + this.props.admin); 
+        if (!this.props.admin || !this.props.admin.isAuthenticated){       
         var isAuthenticated = false;
     }else{
         var isAuthenticated = this.props.admin.isAuthenticated;
@@ -25,12 +38,12 @@ class Navbar extends React.Component{
         const adminLinks = (
             <ul className="nav nav-pills ">
                 <li role="presentation" className="active"><Link to="/">Home</Link></li>
-                <li role="presentation" className="active"><a href='#' onClick= {logout}>Logout</a></li>
+                <li role="presentation" className="active"><a href='#' onClick= {this.logout}>Logout</a></li>
             </ul>
 
             
    ) ;
-   if (!this.props.admin){       
+   if (!this.props.admin || !this.props.admin.isAuthenticated){       
     var welcomeName = false;
 }else{
     var welcomeName = this.props.admin.admin.username;
@@ -72,5 +85,8 @@ const mapStateToProps = (state, ownProps) => {
     }
 }
 
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({logout: logout}, dispatch)
+}
 
-export default connect(mapStateToProps, logout )(Navbar);
+export default connect(mapStateToProps, mapDispatchToProps )(Navbar);
