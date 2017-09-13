@@ -40,6 +40,11 @@ var UserSchema = new Schema({
     isAuthenticated:{
         type: 'boolean',
         required:true
+    },
+
+    bucketName:{
+        type: 'string',
+        required:true
     }
 });
 

@@ -11,16 +11,24 @@ var User = require('../../models/User');
 var jwt = require('jsonwebtoken');
 //TODO: hide secret in different file
 const JWT_SECRET = 'J5bn&vwMW1%vRP1x';
+// Imports the Google Cloud client library
+const Storage = require('@google-cloud/storage');
+// Instantiates a client
+const storage = Storage();
 
 
 
 router.get('/login', function(req, res){
-    res.json({register: 'login working correctly'})
+    res.json({login: 'login working correctly'})
 });
 
 router.get('/register', function(req, res){
     res.json({register: 'register working correctly'})
 });
+
+router.get('/upload', function(req, res){ 
+    res.json({upload: 'upload working correctly'})
+})
 // Register User
 router.post('/register', function(req, res){
     //this gets all the fields from the register request and runs 
@@ -50,19 +58,32 @@ router.post('/register', function(req, res){
         }
     else {
         //Creates new user
+        var bucketId = Math.floor(Math.random() * 5000);
         var newUser = new User({
             firstName: firstName,
             lastName: lastName,
             email:email,
             username: username,
             password: password,
-            isAuthenticated: false
+            isAuthenticated: false,
+            bucketName: bucketId + username
         });
         //passes newUser to the createUser function which generates a hashed salted pwrd
         User.createUser(newUser, function(err, user){
             if(err) throw err;
             console.log(user);
         });
+       
+        // Creates a new google storage bucket
+        storage.createBucket(newUser.bucketName)
+        .then(() => {
+          console.log(`Bucket ${newUser.bucketName} created.`);
+        })
+        .catch((err) => {
+          console.error('ERROR:', err);
+        });
+
+
         //success message
         res.json({
             success_msg: 'You are registered and can now login',
@@ -138,5 +159,16 @@ router.get('/logout', function(req, res){
 
    
 });
+
+router.post('/upload', function(req,res){
+    storage.bucket(bucketName)
+    .upload(filename)
+    .then(() => {
+      console.log(`${filename} uploaded to ${bucketName}.`);
+    })
+    .catch((err) => {
+      console.error('ERROR:', err);
+    });
+})
 
 module.exports = router;
