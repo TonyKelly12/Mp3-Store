@@ -161,14 +161,30 @@ router.get('/logout', function(req, res){
 });
 
 router.post('/upload', function(req,res){
+    console.log(req.body);
+    console.log(req.body.files);
+    console.log(req.body.files[0].preview);
+  
+    const bucketName = req.body.bucketName
+    const song = req.body.files[0].preview
+    console.log('Song Console log below');
+    console.log(song)
+   // req.body.files.forEach(file => {
+   
+   // });       
+            
+    // do whatever you want with the file content
     storage.bucket(bucketName)
-    .upload(filename)
+    .upload(song)
     .then(() => {
       console.log(`${filename} uploaded to ${bucketName}.`);
     })
     .catch((err) => {
       console.error('ERROR:', err);
     });
+        
+    
+    
 })
 
 module.exports = router;
