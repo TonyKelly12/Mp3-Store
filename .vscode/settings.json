@@ -1,5 +1,6 @@
 {
     "eslint.enable": false,
     "tslint.enable": false,
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "jshint.enable": false
 }

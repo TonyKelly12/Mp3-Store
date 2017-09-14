@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Dropzone from 'react-dropzone';
 import {connect} from 'react-redux';
 
-function callUploadFile(acceptedFiles) {
+function callUploadFile(loadedFiles) {
   return fetch('http://localhost:9000/admin/upload', {
     method: 'POST',
     mode: 'cors',
@@ -10,7 +10,7 @@ function callUploadFile(acceptedFiles) {
       
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(acceptedFiles)
+    body: JSON.stringify(loadedFiles)
   })
     .then((response) => response.json())
     .then((responseJson) => {
@@ -50,15 +50,20 @@ class Mp3 extends Component{
                 // fires immediately after rendering with new P or S  
             
             }
-            uploadFile = ({acceptedFiles, rejectedFiles}) =>{
-                const loadedFiles = {
-                    files: acceptedFiles,
+            uploadFile = (uploadedFile) =>{
+              console.log('Run ondrop')
+              console.log(uploadedFile);
+               const loadedFiles = {
+                    files: uploadedFile,
                     bucketName: this.state.bucketName
-                }
-             console.log('Run ondrop')
-             this.setState({ acceptedFiles, rejectedFiles })
-             console.log(acceptedFiles);
+               }
+             
+             //console.log(loadedFiles.files[0].preview)
+             //this.setState(uploadedFile)
+             //localStorage.setItem('uploadedFile', uploadedFile)
              callUploadFile(loadedFiles);
+             
+             
     }
 
     render(){
@@ -68,14 +73,32 @@ class Mp3 extends Component{
            <section>
            <div className="dropzone">
              <Dropzone
-               accept="image/jpeg, image/png"
-               onDrop={(acceptedFiles, rejectedFiles) => { 
-                
-                  this.uploadFile({ acceptedFiles, rejectedFiles });   
+                accept="image/jpeg, image/png"
+                onDrop = {
+                  (acceptedFiles, rejectedFiles) => {
+                    acceptedFiles.forEach(file => {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        console.log('onLoad function file log');
+                        console.log(event.target.result)
+                        const uploadedFile = event.target.result
+                        //const fileAsBinaryString = reader.result;
+                        this.uploadFile(uploadedFile);
+                      }
+                    
+                      
+                      reader.onabort = () => console.log('file reading was aborted');
+                      reader.onerror = () => console.log('file reading has failed');
+                    
+                      reader.readAsDataURL(file);
+                      console.log(file);
+                      
+                    })
+                 
+                  }
+                  
                 }
-                
-                }
-             >
+              >
                <p>Try dropping some files here, or click to select files to upload.</p>
                <p>Only *.jpeg and *.png images will be accepted</p>
              </Dropzone>

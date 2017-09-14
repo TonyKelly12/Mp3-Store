@@ -163,12 +163,11 @@ router.get('/logout', function(req, res){
 router.post('/upload', function(req,res){
     console.log(req.body);
     console.log(req.body.files);
-    console.log(req.body.files[0].preview);
   
     const bucketName = req.body.bucketName
-    const song = req.body.files[0].preview
+    const song = req.body.files
     console.log('Song Console log below');
-    console.log(song)
+    //console.log(song)
    // req.body.files.forEach(file => {
    
    // });       
