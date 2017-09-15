@@ -11,6 +11,8 @@ const session = require('express-session');
 const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
 const formi = require('formidable');
+const fileUpload = require('express-fileupload');
+
 
      //Google Data store connection
      // Authentication is automatic
@@ -58,8 +60,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
 //Set Static Folder
+app.use('/tempFiles', express.static(path.join(__dirname, 'public')))
 app.use(express.static(path.join(__dirname,'public')));
-
+app.use(fileUpload());
 //Express Session
 app.use(session({
     // before dist change to var and store else where
@@ -103,6 +106,7 @@ app.use(function (req, res, next) {
     next();
 
 });
+
 
 
 app.use(function(req, res, next) {

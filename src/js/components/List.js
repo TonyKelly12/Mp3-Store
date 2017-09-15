@@ -1,7 +1,7 @@
 import React from 'react';
 import image from '../../img/cloud-upload-download-data-transfer.svg';
 import Collapsible from './Collapsible';
-import Mp3 from './Mp3Dropzone';
+import Mp3 from './Mp3Dropzone/Mp3Dropzone';
 class List extends React.Component {
 
     constructor(props) {

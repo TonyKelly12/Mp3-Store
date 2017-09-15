@@ -15,7 +15,7 @@ const JWT_SECRET = 'J5bn&vwMW1%vRP1x';
 const Storage = require('@google-cloud/storage');
 // Instantiates a client
 const storage = Storage();
-
+var fs = require('fs');
 
 
 router.get('/login', function(req, res){
@@ -162,10 +162,17 @@ router.get('/logout', function(req, res){
 
 router.post('/upload', function(req,res){
     console.log(req.body);
-    console.log(req.body.files);
+    console.log(req.body.file);
   
     const bucketName = req.body.bucketName
-    const song = req.body.files
+    const song = req.body.file
+    const fileName = req.body.fileName
+   
+   // var newpath = 'http://localhost:9000/tempFiles'
+    //fs.writeFile(fileName, song, function (err) {
+     // if (err) throw err;
+     
+   // });
     console.log('Song Console log below');
     //console.log(song)
    // req.body.files.forEach(file => {
