@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Dropzone from './TDropzone';
+import TDropzone from './TDropzone';
 import {connect} from 'react-redux';
 
 function callUploadFile(loadedFiles) {
@@ -74,44 +74,9 @@ class Mp3 extends Component{
         console.log(this.props.admin)
         return(
            <section>
-           <div className="dropzone">
-             <Dropzone
-                accept="image/jpeg, image/png"
-                onDrop = {
-                  (acceptedFiles, rejectedFiles) => {
-                    acceptedFiles.forEach(file => {
-                      const reader = new FileReader();
-                      reader.onload = (event) => {
-                        console.log('onLoad function file log');
-                        console.log(file)
-                       const fileurl = event.target.result
-                        const uploadedFile =
-                        { 
-                        fileName: file.name,
-                        file: URL.createObjectURL(file)
-                        }
-                        console.log('uploadedFile function')
-                        console.log(uploadedFile.file)
-                        //const fileAsBinaryString = reader.result;
-                        this.uploadFile(uploadedFile);
-                      }
-                    
-                      
-                      reader.onabort = () => console.log('file reading was aborted');
-                      reader.onerror = () => console.log('file reading has failed');
-                    
-                      reader.readAsDataURL(file);
-                      console.log(file);
-                      
-                    })
-                 
-                  }
-                  
-                }
-              >
-               <p>Try dropping some files here, or click to select files to upload.</p>
-               <p>Only *.jpeg and *.png images will be accepted</p>
-             </Dropzone>
+           <div >
+             <TDropzone/>
+            
            </div>
            <aside>
              <h2>Accepted files</h2>
@@ -127,6 +92,7 @@ class Mp3 extends Component{
                }
              </ul>
            </aside>
+     
          </section>
         )
     }

@@ -1,21 +1,81 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types'
+//import{
+ // dropzoneOptions
+//} from './dropzoneUtil'
 
-class Dropzone extends Component{
+//import Dropzone from '../../../../dropzone/dist/dropzone';
 
-render(){
 
-    return(
-         <div>
-         <script src="../../../../dropzone/dist/dropzone"></script>
-        <form action="/file-upload" className="dropzone">
-  <div className="fallback">
-    <input name="file" type="file" multiple />
+import {Field, reduxForm, propTypes, SubmissionError} from 'redux-form';
+import {browserHistory} from 'react-router';
+
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+
+const renderField = ({ input, label, type, meta: { touched, error } }) =>(
+  <div>
+    <label>
+      {label}
+    </label>
+    <div>
+      <input {...input} placeholder={label} type={type} />
+      {touched &&
+        error &&
+        <span>
+          {error}
+        </span>}
+    </div>
   </div>
-</form>
-</div>
-    )
+);
 
-}
-}
+const submit = ({
+      title = '',
+      file = {}
+    }, submitAction) => {
 
-export default Dropzone;
+      //VALIDATION SECTION
+      let error = {};
+      let isError = false;
+
+     
+      if (title.trim() === '') {
+        error.password = 'Passwords Incorrect';
+        isError = true;
+      }
+      if (isError) {
+        throw new SubmissionError(error);
+      } else { 
+        submitAction({username, password});
+        }}
+   
+const TDropzone = ({handleSubmit, submitAction}) => (
+<form onSubmit={handleSubmit((fields) => submit(fields, submitAction))}>
+        <Field
+          name="title"
+          type="text"
+          component={renderField}
+          label="Title"
+        />
+        <Field
+          name="mp3Uplaod"
+          type="File"
+          component={renderField}
+          label="Mp3 uplaod"
+        />
+       
+        <div>  
+        <input type="submit" value="Song Upload"/>
+          
+         
+        
+        </div>
+      </form>
+
+);
+const songUpload = reduxForm({
+    form: 'songUpload', // a unique identifier for this form
+ 
+  })(TDropzone);
+
+export default songUpload;

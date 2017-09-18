@@ -28,7 +28,7 @@ ReactDom.render(
         
     <HashRouter>
         <div>
-        <script src="../../dropzone/dist/dropzone"></script>
+       
           <Navbar />  
         <div>
             
