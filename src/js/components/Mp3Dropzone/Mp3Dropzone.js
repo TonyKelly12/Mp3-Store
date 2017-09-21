@@ -2,24 +2,7 @@ import React, {Component} from 'react';
 import TDropzone from './TDropzone';
 import {connect} from 'react-redux';
 
-function callUploadFile(loadedFiles) {
-  return fetch('http://localhost:9000/admin/upload', {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(loadedFiles)
-  })
-    .then((response) => response.json())
-    .then((responseJson) => {
-      return responseJson;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
+
 
 
 class Mp3 extends Component{
