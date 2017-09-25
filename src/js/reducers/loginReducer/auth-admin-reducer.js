@@ -9,7 +9,7 @@ export default function (state = initialState, action){
 
         case "LOGOUT_ADMIN":
         console.log('logout_admin ' + action.payload)
-        return Object.assign({}, state.admin, {
+        return Object.assign({}, state.admin.admin, {
             isAuthenticated: false
           })
     

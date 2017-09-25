@@ -1,4 +1,4 @@
-require('../../../../dropzone/dist/dropzone')
+import Dropzone from '../../../../dropzone/dist/dropzone'
 export const dropzoneOptions = Dropzone.options.tdropzone= {
     
     paramName: "file", // The name that will be used to transfer the file

@@ -9,7 +9,7 @@ class AdminDetail extends Component{
     render(){
         
         
-        if(!this.props.admin || !this.props.admin.isAuthenticated){ //If there is no user selected or if isAuthenticated null render below
+        if(!this.props.admin || this.props.admin.isAuthenticated == false){ //If there is no user selected or if isAuthenticated null render below
                 return(<h4>Please Log In</h4>);
             }
              console.log('admin detail ' + this.props.admin)

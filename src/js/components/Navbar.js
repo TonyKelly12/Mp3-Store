@@ -11,42 +11,46 @@ class Navbar extends React.Component{
         super(props); 
       
         // makes this refer to this component
-      if (!this.props.admin || this.props.admin == {}){
+      if (!this.props.activeAdmin || this.props.activeAdmin == null || this.props.activeAdmin.isAuthenticated == false){
           this.state = null;
           this.logout = this.props.logout.bind(this);
       } else
-        this.state = isAuthenticated;
+        this.state = this.props.activeAdmin.admin.isAuthenticated;
         this.logout = this.props.logout.bind(this);   
     
     }
     
     
      logout(props){
-         console.log("admin logout " + this.props.admin)
+         console.log("admin logout " + this.props.activeAdmin)
          props.preventDefault();
-        this.logout(this.props.admin);
+        this.logout(this.props.activeAdmin.admin);
     }
 
     render(){
-        console.log('is authenticated ' + this.props.admin); 
-        if (!this.props.admin || !this.props.admin.isAuthenticated){       
+        console.log('active admin below' ); 
+        console.log(this.props.activeAdmin)
+
+
+        if (!this.props.activeAdmin || this.props.activeAdmin.isAuthenticated == false){       
         var isAuthenticated = false;
     }else{
-        var isAuthenticated = this.props.admin.isAuthenticated;
+        var isAuthenticated = this.props.activeAdmin.admin.isAuthenticated;
     }
 
         const adminLinks = (
             <ul className="nav nav-pills ">
                 <li role="presentation" className="active"><Link to="/">Home</Link></li>
+                <li role="presentation" className="active"><Link to="/upload">Upload</Link></li>
                 <li role="presentation" className="active"><a href='#' onClick= {this.logout}>Logout</a></li>
             </ul>
 
             
    ) ;
-   if (!this.props.admin || !this.props.admin.isAuthenticated){       
+   if (!this.props.activeAdmin || this.props.activeAdmin.isAuthenticated == false){       
     var welcomeName = false;
 }else{
-    var welcomeName = this.props.admin.admin.username;
+    var welcomeName = this.props.activeAdmin.admin.username;
 }
    const adminWelcom = (
        
@@ -81,7 +85,7 @@ class Navbar extends React.Component{
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        admin: state.activeAdmin
+        activeAdmin: state.activeAdmin
     }
 }
 

@@ -12,9 +12,9 @@ import ListApp from './ListApp';
 import UserApp from './UserApp';
 import RegisterApp from './RegisterApp';
 import LoginApp from './LoginApp';
-
+import Mp3Dropzone from './components/Mp3Dropzone/Mp3Dropzone'
 //Setting Auth Token
-import loginAuthToken from './sagas/appSaga';
+import loginAuthToken from './sagas/loginAppSaga';
 
 loginAuthToken(localStorage.jwtToken)
 
@@ -36,6 +36,8 @@ ReactDom.render(
             <Route exact ={true} path='/admin' component={UserApp}/>
             <Route exact ={true} path='/register' component={RegisterApp}/>
             <Route exact ={true} path='/login' component={LoginApp}/>
+            <Route exact ={true} path='/upload' component={Mp3Dropzone}/>
+
            
         </div>
         </div>

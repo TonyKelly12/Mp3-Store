@@ -1,7 +1,7 @@
 import React from 'react';
-import {Field, reduxForm, Form} from 'redux-form'
+import {Field, reduxForm, Form,SubmissionError  } from 'redux-form'
 
-import { SubmissionError } from 'redux-form'
+
 
 function saveAdmin(data) {
   return fetch('http://localhost:9000/admin/register', {
@@ -37,7 +37,7 @@ const renderField = ({
     <div className="input-row">
       <label>{label}</label>
       <div>
-        <input {...input} placeholder={label} type={type}/> {touched && (error && <div className="error">{error}</div>)}
+        <input {...input} placeholder={label} type={type} /> {touched && (error && <div className="error">{error}</div>)}
       </div>
     </div>
   )

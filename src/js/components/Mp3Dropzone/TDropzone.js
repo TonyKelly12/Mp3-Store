@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types'
-//import{
- // dropzoneOptions
-//} from './dropzoneUtil'
 import Dropzone from '../../../../dropzone/dist/dropzone';
 import {Field, reduxForm, propTypes, SubmissionError} from 'redux-form';
 import {browserHistory} from 'react-router';
@@ -10,103 +7,105 @@ import {browserHistory} from 'react-router';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-function callUploadFile(file) {
-  return fetch('http://localhost:9000/admin/upload', {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(file)
-  })
-    .then((response) => response.json())
-    .then((responseJson) => {
-      return responseJson;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+
+Dropzone.options.mp3Upload = {
+  uploadMultiple: true,
+  acceptedFiles: "image/jpeg",
+  accept: function (file, done) {
+    if (file.name == "justinbieber.jpg") {
+      done("Naha, you don't.");
+    } else {
+      done();
+    }
+  },
+
+  init: function (event) {
+    this
+      .on("addedfile", function (file) {
+        console.log(file);
+        acceptedFiles.unshift(file);
+
+      });
+  }
 }
 
 
-
-const renderField = ({ input, label, type, meta: { touched, error } }) =>(
-  <div>
-    <label>
-      {label}
-    </label>
-    <div>
-      <input {...input} placeholder={label} type={type} />
-      {touched &&
-        error &&
-        <span>
-          {error}
-        </span>}
+const renderField = ({
+  input,
+  label,
+  type,
+  meta: {
+    touched,
+    error,
+    warning
+  }
+}) => {
+  console.log(input)
+  
+  return (
+    
+    <div className="input-row">
+      <label>{label}</label>
+      <div>
+        <input
+          {...input}
+          placeholder={label}
+          type={type}
+          className='dropzone'
+          action="/file-upload"
+          id='mp3Upload'/>
+      </div>
     </div>
-  </div>
-);
+    ) }; 
+   
 
-const submit = ({
-      title = '',
-      file = {}
-    }, submitAction) => {
-
-      //VALIDATION SECTION
-      let error = {};
-      let isError = false;
 
      
-      if (title.trim() === '') {
-        error.password = 'Passwords Incorrect';
-        isError = true;
-      }
-      if (isError) {
-        throw new SubmissionError(error);
-      } else { 
-        console.log(file)
-        }}
-   
-class TDropzone extends Component{
-    constructor(props) {    // fires before component is mounted    
-        super(props); 
-            const acceptedFiles = ['jpeg']
-        // makes this refer to this component
-            this.state = {
-                
-                isAuthenicated:{},
-                acceptedFiles: [],
-                rejectedFiles: [],
-                bucketName:{}
-            }
-            
-          
-         }
+var upload = () => {console.log(' upload working');}
+    
 
-    componentDidMount() {
-       Dropzone.options.mp3Upload = {
-        init: function(event) {
-              this.on("addedfile", function(file) { 
-                console.log(file); 
-                callUploadFile(file);
-              });
-            
-             }
-             }
-    }
-    render(){
-      
-      return(
-      <form action="/file-upload" className="dropzone" id='mp3Upload'>
-      <div className="fallback">
-        <input name="file" type="file" multiple />
-      </div>
-    </form>
-      )
+var acceptedFiles = []
+var rejectedFiles = []
+
+const TDropzone = () => (
+  
+  <form action="/file-upload" className="dropzone" id='mp3Upload' onSubmit={upload(acceptedFiles)}>
+          
+         
+          <div>  
+          <input type="submit" value="Submit"/>
+          </div>
+          <section>
+
+          <aside>
+             <h2>Accepted files</h2>
+             <ul>
+               {
+                acceptedFiles.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
+               }
+             </ul>
+             <h2>Rejected files</h2>
+             <ul>
+               {
+                 rejectedFiles.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
+               }
+             </ul>
+           </aside>
+          </section>
+          <div className="fallback">
+            <input name="file" type="file" multiple />
+          </div>
+        </form>
+  
+  );
+     
+
+
+     const mapDispatchToProps = (dispatch) => {return bindActionCreators({
+      upload: upload
+    }, dispatch)
 }
-songUpload = reduxForm({
-    form: 'songUpload', // a unique identifier for this form
- 
-  })(TDropzone);
-}
-export default TDropzone ;
+
+
+
+export default TDropzone;
