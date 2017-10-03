@@ -5,7 +5,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
+var multer  = require('multer')
 var User = require('../../models/User');
 
 var jwt = require('jsonwebtoken');

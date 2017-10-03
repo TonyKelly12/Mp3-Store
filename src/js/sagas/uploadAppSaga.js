@@ -32,7 +32,8 @@ function uploadData(data) {
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 function* callUpload(action) {
-   yield put( startSubmit('tDropzone'));
+  console.log(action.data);
+   yield put( startSubmit('upload'));
    let error = {};
     const result = yield call(uploadData, action.data)
     if (result.error) {

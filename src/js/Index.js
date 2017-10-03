@@ -7,12 +7,12 @@ import {Provider} from 'react-redux';
 //react router
 import { BrowserRouter as Router, Route, Link, HashRouter } from 'react-router-dom';
 import Navbar from './components/Navbar';
-
+import Mp3Dropzone from './components/Mp3Dropzone/Mp3Dropzone'
 import ListApp from './ListApp';
 import UserApp from './UserApp';
 import RegisterApp from './RegisterApp';
 import LoginApp from './LoginApp';
-import Mp3Dropzone from './components/Mp3Dropzone/Mp3Dropzone'
+import Upload from './components/Upload/Upload'
 //Setting Auth Token
 import loginAuthToken from './sagas/loginAppSaga';
 
