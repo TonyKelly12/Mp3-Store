@@ -55,8 +55,9 @@ app.engine('handlebars', exphbs({defaultLayout: 'layout'}));
 app.set('view engine', 'handlebars'); */
 
 //BodyParser Middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({extended: false,
+                                limit: '50mb'}));
 app.use(cookieParser());
 
 //Set Static Folder

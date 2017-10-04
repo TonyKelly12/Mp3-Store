@@ -1,26 +1,20 @@
 import React, {Component} from 'react';
-
+import axios from 'axios';
 import {connect} from 'react-redux';
 import Dropzone from 'react-dropzone'
 
 
-function callUploadFile(loadedFiles) {
-    return fetch('http://localhost:9000/admin/upload', {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        
-        'Content-Type': 'application/json',
+function callUploadFile(file) {
+    return  axios({
+      url: `http://localhost:9000/admin/upload`, //*** Note these are not single quotes ' they are ` */
+      method: 'post',
+      data: {
+        file
+            
       },
-      body: JSON.stringify(loadedFiles)
     })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        return responseJson;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+     .then(response => res.status(200).json(response.data.data))
+     .catch((error) => res.status(500).json(error.response.data));
   }
   
   
@@ -52,18 +46,17 @@ function callUploadFile(loadedFiles) {
                   // fires immediately after rendering with new P or S  
               
               }
-              uploadFile = (uploadedFile) =>{
-                console.log('Run ondrop')
-                console.log(uploadedFile);
-                 const loadedFiles = {
-                      files: uploadedFile,
-                      bucketName: this.state.bucketName
-                 }
+              uploadFile = (file) =>{
+                console.log(file)
+                
+                 
+                  file.bucketName = this.state.bucketName
+                 console.log(file.bucketName)
                
                //console.log(loadedFiles.files[0].preview)
                //this.setState(uploadedFile)
                //localStorage.setItem('uploadedFile', uploadedFile)
-               callUploadFile(loadedFiles);
+               callUploadFile(file);
                
                
       }
@@ -79,22 +72,8 @@ function callUploadFile(loadedFiles) {
                   onDrop = {
                     (acceptedFiles, rejectedFiles) => {
                       acceptedFiles.forEach(file => {
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                          console.log('onLoad function file log');
-                          console.log(event.target.result)
-                          const uploadedFile = event.target.result
-                          //const fileAsBinaryString = reader.result;
-                          this.uploadFile(uploadedFile);
-                        }
-                      
-                        
-                        reader.onabort = () => console.log('file reading was aborted');
-                        reader.onerror = () => console.log('file reading has failed');
-                      
-                        reader.readAsDataURL(file);
-                        console.log(file);
-                        
+                       
+                        this.uploadFile(file);
                       })
                    
                     }

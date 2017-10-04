@@ -7,15 +7,28 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var multer  = require('multer')
 var User = require('../../models/User');
-
+const Storage = require('@google-cloud/storage');
+const gStorage = Storage();
 var jwt = require('jsonwebtoken');
 //TODO: hide secret in different file
 const JWT_SECRET = 'J5bn&vwMW1%vRP1x';
-// Imports the Google Cloud client library
-const Storage = require('@google-cloud/storage');
+
 // Instantiates a client
-const storage = Storage();
+//const storage = Storage();
 var fs = require('fs');
+
+const multerStorage = multer.diskStorage({
+    
+    destination: function (req, file, cb){
+        cb(null ,'../../tempFiles')},
+    filename(req, file, cb) {
+      cb(null, `${new Date()}-${file.originalname}`);
+      
+    },
+    
+  } );
+  
+  const upload = multer({ multerStorage });
 
 
 router.get('/login', function(req, res){
@@ -75,7 +88,7 @@ router.post('/register', function(req, res){
         });
        
         // Creates a new google storage bucket
-        storage.createBucket(newUser.bucketName)
+        gStorage.createBucket(newUser.bucketName)
         .then(() => {
           console.log(`Bucket ${newUser.bucketName} created.`);
         })
@@ -159,15 +172,18 @@ router.get('/logout', function(req, res){
 
    
 });
+//TODO: Below multer not working correctly file not saving to storage.
+router.post('/upload',upload.single('file'), (req,res,next) => {
+    
+   
+    // Imports the Google Cloud client library
 
-router.post('/upload', function(req,res){
-    console.log(req.body);
-    console.log(req.body.file);
-  
     const bucketName = req.body.bucketName
     const song = req.body.file
     const fileName = req.body.fileName
-   
+    const file = req.file; // file passed from client
+    const meta = req.body; // all other values passed from the client, like name, etc..
+    console.log(file);
    // var newpath = 'http://localhost:9000/tempFiles'
     //fs.writeFile(fileName, song, function (err) {
      // if (err) throw err;
@@ -180,10 +196,10 @@ router.post('/upload', function(req,res){
    // });       
             
     // do whatever you want with the file content
-    storage.bucket(bucketName)
-    .upload(song)
-    .then(() => {
-      console.log(`${filename} uploaded to ${bucketName}.`);
+    gStorage.bucket(meta.bucket)
+    .upload('../../tempFiles/')
+   .then(() => {
+     console.log(`${filename} uploaded to ${bucketName}.`);
     })
     .catch((err) => {
       console.error('ERROR:', err);
