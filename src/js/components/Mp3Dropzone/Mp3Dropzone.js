@@ -2,14 +2,16 @@ import React, {Component} from 'react';
 import axios from 'axios';
 import {connect} from 'react-redux';
 import Dropzone from 'react-dropzone'
+import {Field, reduxForm, Form,SubmissionError  } from 'redux-form'
 
-
-function callUploadFile(file) {
+function callUploadFile(data) {
+  console.log('upload data below');
+  console.log(data)
     return  axios({
       url: `http://localhost:9000/admin/upload`, //*** Note these are not single quotes ' they are ` */
       method: 'post',
       data: {
-        file
+        data
             
       },
     })
@@ -17,8 +19,64 @@ function callUploadFile(file) {
      .catch((error) => res.status(500).json(error.response.data));
   }
   
-  
-  class Mp3 extends Component{
+
+var goodFiles = []
+var badFiles = []
+  const renderField = ({
+    input,
+    label,
+    type,
+    meta: {
+      touched,
+      error,
+      warning
+    }
+  }) => {
+    console.log(input)
+    return (
+      <section>
+      <div>
+        
+    <div className="dropzone">
+      <Dropzone
+         accept="image/jpeg, image/png"
+         onDrop = {
+           (acceptedFiles, rejectedFiles) => {
+             acceptedFiles.forEach(file => {
+              //TODO: call a function to add file to accepted state []
+               goodFiles.push(file);
+               console.log(goodFiles)
+             })
+          
+           }
+           
+         }
+       >
+        <p>Try dropping some files here, or click to select files to upload.</p>
+        <p>Only *.jpeg and *.png images will be accepted</p>
+      </Dropzone>
+    </div>
+    </div>
+    <aside>
+      <h2>Accepted files</h2>
+      <ul>
+        {
+          goodFiles.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
+        }
+      </ul>
+      <h2>Rejected files</h2>
+      <ul>
+        {
+          badFiles.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
+        }
+      </ul>
+    </aside>
+  </section>
+    )
+  }
+
+
+  class Mp3Dropzone extends Component{
       constructor(props) {    // fires before component is mounted    
           super(props); 
               const acceptedFiles = ['jpeg']
@@ -31,86 +89,48 @@ function callUploadFile(file) {
                   bucketName:{}
               } 
               
-           }
-  
-           componentDidMount() {   
-               // fires immediately after the initial render 
-               if(this.props.admin){
-                  this.setState({
-                      isAuthenicated: this.props.admin.admin.isAuthenicated,
-                      bucketName: this.props.admin.admin.bucketName
-                  })
-              }// set state 
-              } 
-              componentDidUpdate() {   
-                  // fires immediately after rendering with new P or S  
-              
-              }
-              uploadFile = (file) =>{
-                console.log(file)
-                
-                 
-                  file.bucketName = this.state.bucketName
-                 console.log(file.bucketName)
-               
-               //console.log(loadedFiles.files[0].preview)
-               //this.setState(uploadedFile)
-               //localStorage.setItem('uploadedFile', uploadedFile)
-               callUploadFile(file);
-               
-               
-      }
-  
+              this.submit = (goodFiles) => {
+                 //VALIDATION SECTION{f
+                 console.log('submited files below')
+                 console.log(goodFiles)
+                 let error = {};
+                 let isError = false;
+                 //submit form to server
+                   return uploadAction(goodFiles)
+                   .then (data => {
+                     console.log(data)
+                   }); ;
+                 }    
+               }
+    
+      componentDidMount() {   
+       // fires immediately after the initial render 
+      // set state 
+      } 
+      
+        
       render(){
           console.log(this.state);
           console.log(this.props.admin)
           return(
-             <section>
-             <div className="dropzone">
-               <Dropzone
-                  accept="image/jpeg, image/png"
-                  onDrop = {
-                    (acceptedFiles, rejectedFiles) => {
-                      acceptedFiles.forEach(file => {
-                       
-                        this.uploadFile(file);
-                      })
-                   
-                    }
-                    
-                  }
-                >
-                 <p>Try dropping some files here, or click to select files to upload.</p>
-                 <p>Only *.jpeg and *.png images will be accepted</p>
-               </Dropzone>
-             </div>
-             <aside>
-               <h2>Accepted files</h2>
-               <ul>
-                 {
-                   this.state.acceptedFiles.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-                 }
-               </ul>
-               <h2>Rejected files</h2>
-               <ul>
-                 {
-                   this.state.rejectedFiles.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-                 }
-               </ul>
-             </aside>
-           </section>
-          )
-      }
+              <form onSubmit={this.props.handleSubmit(this.submit)}>
+                <div>
+                  <Field
+                    name="file"
+                    component={renderField}
+                    type="file"
+                    label='Upload File'
+                    />
+                </div>
   
+                 <input type="submit" value="Submit"/>
+              </form>)               
+      }  
   }
   
-  const mapStateToProps = (state, ownProps) => {
-      return {
-          admin: state.activeAdmin 
-      }
-  }
-  
-  
+      Mp3Dropzone = reduxForm({form: 'dropzone'})(Mp3Dropzone);
+      
+      export default Mp3Dropzone;
   
   //Exports state and connects it to UserDetail component only
-  export default connect(mapStateToProps)(Mp3);
+  

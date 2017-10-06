@@ -2,14 +2,20 @@ import { call, put, takeEvery, takeLatest, fork } from 'redux-saga/effects';
 import {startSubmit, stopSubmit} from 'redux-form';
 //import loginOptions from '../requestOptions/loginOptions';
 //import loginAuthToken from '../requestOptions/authOptions';
-
+import axios from 'axios';
 import jwt from 'jsonwebtoken';
 //BElow is setting default header for login request
 var defaultHeader = {'Content-Type': 'application/json'};
 var adminHeaders = new Headers(defaultHeader);
 
 function uploadData(data) {
-    return fetch('http://localhost:9000/admin/upload', {
+   
+  axios.post('http://localhost:9000/admin/upload', data).then((response) => {
+    console.log(response); // do something with the response
+  });
+  
+  
+  /*return fetch('http://localhost:9000/admin/upload', {
       method: 'POST',
       mode: 'cors',
       headers: adminHeaders ,
@@ -21,8 +27,8 @@ function uploadData(data) {
       })
       .catch((error) => {
         console.error(error);
-      });
-  } ;
+      });*/
+  } ; 
   
 
   
@@ -44,9 +50,9 @@ function* callUpload(action) {
        
         
      
-       yield put({type: "AUTH_ADMIN", payload: admin});
+       yield put({type: "UPLOAD_SONG", payload: data});
     }
-   yield put(stopSubmit('login',error));
+   yield put(stopSubmit('upload',error));
  }
  
 

@@ -28,7 +28,7 @@ const multerStorage = multer.diskStorage({
     
   } );
   
-  const upload = multer({ multerStorage });
+  const upload = multer({ multerStorage }).single('file');
 
 
 router.get('/login', function(req, res){
@@ -173,17 +173,23 @@ router.get('/logout', function(req, res){
    
 });
 //TODO: Below multer not working correctly file not saving to storage.
-router.post('/upload',upload.single('file'), (req,res,next) => {
+router.post('/upload', (req,res,next) => {
+    console.log('before upload function')
+    upload (req,res, function(err)  {
+        if (err){
+            console.log('error during upload')
+        }
+
     
    
     // Imports the Google Cloud client library
-
+    
     const bucketName = req.body.bucketName
     const song = req.body.file
     const fileName = req.body.fileName
     const file = req.file; // file passed from client
     const meta = req.body; // all other values passed from the client, like name, etc..
-    console.log(file);
+    console.log(meta);
    // var newpath = 'http://localhost:9000/tempFiles'
     //fs.writeFile(fileName, song, function (err) {
      // if (err) throw err;
@@ -204,9 +210,10 @@ router.post('/upload',upload.single('file'), (req,res,next) => {
     .catch((err) => {
       console.error('ERROR:', err);
     });
-        
-    
-    
 })
+   
+    
+    
+});
 
 module.exports = router;
