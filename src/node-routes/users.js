@@ -28,8 +28,8 @@ const multerStorage = multer.diskStorage({
     
   } );
   
-  const upload = multer({ multerStorage }).single('file');
-
+  const upload = multer({ multerStorage })
+  const cpUpload = upload.fields([{ name: 'file', maxCount: 1 }, { name: 'bucketName' }])
 
 router.get('/login', function(req, res){
     res.json({login: 'login working correctly'})
@@ -175,7 +175,7 @@ router.get('/logout', function(req, res){
 //TODO: Below multer not working correctly file not saving to storage.
 router.post('/upload', (req,res,next) => {
     console.log('before upload function')
-    upload (req,res, function(err)  {
+    cpUpload (req,res, function(err)  {
         if (err){
             console.log('error during upload')
         }
@@ -202,7 +202,7 @@ router.post('/upload', (req,res,next) => {
    // });       
             
     // do whatever you want with the file content
-    gStorage.bucket(meta.bucket)
+    gStorage.bucket(meta.bucketName)
     .upload('../../tempFiles/')
    .then(() => {
      console.log(`${filename} uploaded to ${bucketName}.`);

@@ -1,6 +1,6 @@
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import * as actionCreators from './uploadActions';
+import * as uploadCreators from './uploadActions';
 
 import Mp3Dropzone from './Mp3Dropzone';
 
@@ -12,7 +12,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(actionCreators,dispatch);
+    return bindActionCreators(uploadCreators,dispatch);
  
       
 }

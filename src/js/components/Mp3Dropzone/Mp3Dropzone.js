@@ -1,136 +1,130 @@
-import React, {Component} from 'react';
+import React, { Component} from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import {connect} from 'react-redux';
-import Dropzone from 'react-dropzone'
-import {Field, reduxForm, Form,SubmissionError  } from 'redux-form'
+import Dropzone from 'react-dropzone';
+import {Field, reduxForm, Form,SubmissionError  } from 'redux-form';
+import BucketName from './bucketName';
 
-function callUploadFile(data) {
-  console.log('upload data below');
-  console.log(data)
-    return  axios({
-      url: `http://localhost:9000/admin/upload`, //*** Note these are not single quotes ' they are ` */
-      method: 'post',
-      data: {
-        data
-            
-      },
-    })
-     .then(response => res.status(200).json(response.data.data))
-     .catch((error) => res.status(500).json(error.response.data));
-  }
-  
 
-var goodFiles = []
-var badFiles = []
-  const renderField = ({
-    input,
-    label,
-    type,
-    meta: {
-      touched,
-      error,
-      warning
-    }
-  }) => {
-    console.log(input)
-    return (
-      <section>
-      <div>
-        
-    <div className="dropzone">
+
+const FILE_FIELD_NAME = 'files';
+const FILE_FIELD_BUCKET ='bucketName';
+
+
+
+const renderDropzoneInput = (field) => {
+  const files = field.input.value;
+  return (
+    <div>
       <Dropzone
-         accept="image/jpeg, image/png"
-         onDrop = {
-           (acceptedFiles, rejectedFiles) => {
-             acceptedFiles.forEach(file => {
-              //TODO: call a function to add file to accepted state []
-               goodFiles.push(file);
-               console.log(goodFiles)
-             })
-          
-           }
-           
-         }
-       >
-        <p>Try dropping some files here, or click to select files to upload.</p>
-        <p>Only *.jpeg and *.png images will be accepted</p>
+        name={field.name}
+        onDrop={( filesToUpload, e ) => field.input.onChange(filesToUpload)}
+      >
+        <div>Try dropping some files here, or click to select files to upload.</div>
       </Dropzone>
+      {field.meta.touched &&
+        field.meta.error &&
+        <span className="error">{field.meta.error}</span>}
+      {files && Array.isArray(files) && (
+        <ul>
+          { files.map((file, i) => <li key={i}>{file.name}</li>) }
+        </ul>
+      )}
     </div>
-    </div>
-    <aside>
-      <h2>Accepted files</h2>
-      <ul>
-        {
-          goodFiles.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-        }
-      </ul>
-      <h2>Rejected files</h2>
-      <ul>
-        {
-          badFiles.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-        }
-      </ul>
-    </aside>
-  </section>
-    )
-  }
+  );
+}
 
 
-  class Mp3Dropzone extends Component{
-      constructor(props) {    // fires before component is mounted    
-          super(props); 
-              const acceptedFiles = ['jpeg']
-          // makes this refer to this component
-              this.state = {
-                  
-                  isAuthenicated:{},
-                  acceptedFiles: [],
-                  rejectedFiles: [],
-                  bucketName:{}
-              } 
-              
-              this.submit = (goodFiles) => {
-                 //VALIDATION SECTION{f
-                 console.log('submited files below')
-                 console.log(goodFiles)
-                 let error = {};
-                 let isError = false;
-                 //submit form to server
-                   return uploadAction(goodFiles)
-                   .then (data => {
-                     console.log(data)
-                   }); ;
-                 }    
-               }
-    
-      componentDidMount() {   
-       // fires immediately after the initial render 
-      // set state 
-      } 
-      
+
+
+class Mp3Dropzone extends Component {
+    constructor(props) {    // fires before component is mounted    
+        super(props); 
         
-      render(){
-          console.log(this.state);
-          console.log(this.props.admin)
-          return(
-              <form onSubmit={this.props.handleSubmit(this.submit)}>
+        // makes this refer to this component
+            this.state = {
+                
+                isAuthenicated:{},
+                acceptedFiles: [],
+                rejectedFiles: [],
+                
+            } 
+        }
+        static propTypes = {
+            handleSubmit: PropTypes.func.isRequired,
+            reset: PropTypes.func.isRequired,
+          };
+        
+          
+          
+          onSubmit(data, bucketName) {
+            console.log(bucketName);
+            console.log(data);
+            
+            
+            data.bucketName = bucketName;
+            console.info('POST', data, bucketName);
+            console.info('This is expected to fail:');
+            axios({
+                url: `http://localhost:9000/admin/upload`, //*** Note these are not single quotes ' they are ` */
+                method: 'post',
+                data: data,
+               
+
+                
+                 
+              })
+               .then(response => res.status(200).json(response.data.data))
+               .catch((error) => res.status(500).json(error.response.data));
+            }
+        
+          render() {
+           
+            
+            const {
+              handleSubmit,
+              reset,
+            } = this.props;
+            return (
+              <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
                 <div>
+                  <label htmlFor={FILE_FIELD_NAME}>Files</label>
                   <Field
-                    name="file"
-                    component={renderField}
-                    type="file"
-                    label='Upload File'
-                    />
+                    name={FILE_FIELD_NAME}
+                    component={renderDropzoneInput}
+                  />
+                  <Field
+                    name={FILE_FIELD_BUCKET}
+                    component={BucketName}
+                  />
+               
                 </div>
-  
-                 <input type="submit" value="Submit"/>
-              </form>)               
-      }  
-  }
-  
-      Mp3Dropzone = reduxForm({form: 'dropzone'})(Mp3Dropzone);
+                <div>
+                  <button type="submit">
+                    Submit
+                  </button>
+                  <button onClick={reset}>
+                    Clear Values
+                  </button>
+                </div>
+              </form>
+            );
+          }
+        }
+        
+        Mp3Dropzone = reduxForm({
+          form: 'upload',
+        })(Mp3Dropzone);
+
+        const mapStateToProps = (state, ownProps) => {
+          return {
+              activeAdmin: state.activeAdmin
+          }
+      }
+
+      export default connect(mapStateToProps) (Mp3Dropzone);
       
-      export default Mp3Dropzone;
   
   //Exports state and connects it to UserDetail component only
   

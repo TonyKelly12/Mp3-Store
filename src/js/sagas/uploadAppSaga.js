@@ -8,7 +8,7 @@ import jwt from 'jsonwebtoken';
 var defaultHeader = {'Content-Type': 'application/json'};
 var adminHeaders = new Headers(defaultHeader);
 
-function uploadData(data) {
+/*function uploadData(data) {
    
   axios.post('http://localhost:9000/admin/upload', data).then((response) => {
     console.log(response); // do something with the response
@@ -27,8 +27,8 @@ function uploadData(data) {
       })
       .catch((error) => {
         console.error(error);
-      });*/
-  } ; 
+      });
+  } ; */
   
 
   

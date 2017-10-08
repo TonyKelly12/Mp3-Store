@@ -1,6 +1,6 @@
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import * as actionCreators from './uploadActions';
+//import * as actionCreators from './uploadActions';
 
 import TDropzone from './TDropzone';
 
