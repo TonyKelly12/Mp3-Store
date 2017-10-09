@@ -1,4 +1,3 @@
-'use strict';
 
 const express = require('express');
 const path = require('path');
@@ -10,8 +9,8 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
-const formi = require('formidable');
-const fileUpload = require('express-fileupload');
+const formidable = require('formidable');
+
 
 
      //Google Data store connection
@@ -65,7 +64,7 @@ app.use(express.static(path.join(__dirname,'public')));
 
 
 
-app.use(fileUpload());
+
 //Express Session
 app.use(session({
     // before dist change to var and store else where
@@ -112,11 +111,11 @@ app.use(function (req, res, next) {
 
 
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+//app.use(function(req, res, next) {
+   // res.header("Access-Control-Allow-Origin", "*");
+    //res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    //next();
+  //});
 
 app.use(function(err,req,res,next){
     console.log(err)
