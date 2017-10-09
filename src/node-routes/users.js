@@ -5,6 +5,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var path = require('path')
 var multer  = require('multer')
 var User = require('../../models/User');
 const Storage = require('@google-cloud/storage');
@@ -16,20 +17,22 @@ const JWT_SECRET = 'J5bn&vwMW1%vRP1x';
 // Instantiates a client
 //const storage = Storage();
 var fs = require('fs');
-
-const multerStorage = multer.diskStorage({
+var uploadDir=__dirname+ '/fileUploads/';
+console.log(uploadDir);
+const storage = multer.diskStorage({
     
     destination: function (req, file, cb){
-        cb(null ,'../../tempFiles')},
+        console.log('storage running')
+        cb(null ,"./fileUploads")},
     filename(req, file, cb) {
       cb(null, `${new Date()}-${file.originalname}`);
       
     },
     
-  } );
+  } ); 
   
-  const upload = multer({ multerStorage })
-  const cpUpload = upload.fields([{ name: 'file', maxCount: 1 }, { name: 'bucketName' }])
+ 
+  //const cpUpload = upload.fields([{ name: 'files', maxCount: 1 }, { name: 'bucketName',maxCount: 1 }])
 
 router.get('/login', function(req, res){
     res.json({login: 'login working correctly'})
@@ -175,7 +178,9 @@ router.get('/logout', function(req, res){
 //TODO: Below multer not working correctly file not saving to storage.
 router.post('/upload', (req,res,next) => {
     console.log('before upload function')
-    cpUpload (req,res, function(err)  {
+    console.log(req.body)
+    var upload = multer({ storage: storage }).single('files')
+    upload (req,res, function(err)  {
         if (err){
             console.log('error during upload')
         }
@@ -189,27 +194,30 @@ router.post('/upload', (req,res,next) => {
     const fileName = req.body.fileName
     const file = req.file; // file passed from client
     const meta = req.body; // all other values passed from the client, like name, etc..
-    console.log(meta);
+    console.log(req.body);
    // var newpath = 'http://localhost:9000/tempFiles'
     //fs.writeFile(fileName, song, function (err) {
      // if (err) throw err;
      
    // });
     console.log('Song Console log below');
+    res.json({success:true, message:"upload function ran",  meta:meta})
+    
+    
     //console.log(song)
    // req.body.files.forEach(file => {
    
    // });       
             
     // do whatever you want with the file content
-    gStorage.bucket(meta.bucketName)
+   /* gStorage.bucket(meta.bucket)
     .upload('../../tempFiles/')
    .then(() => {
      console.log(`${filename} uploaded to ${bucketName}.`);
     })
     .catch((err) => {
       console.error('ERROR:', err);
-    });
+    }); */
 })
    
     

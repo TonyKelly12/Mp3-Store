@@ -9,7 +9,7 @@ import BucketName from './bucketName';
 
 
 const FILE_FIELD_NAME = 'files';
-const FILE_FIELD_BUCKET ='bucketName';
+
 
 
 
@@ -58,61 +58,51 @@ class Mp3Dropzone extends Component {
         
           
           
-          onSubmit(data, bucketName) {
-            console.log(bucketName);
-            console.log(data);
-            
-            
-            data.bucketName = bucketName;
-            console.info('POST', data, bucketName);
+               
+          onSubmit(data) {
+            var body = new FormData();
+            Object.keys(data).forEach(( key ) => {
+              body.append(key, data[ key ]);
+            });
+        
+            console.info('POST', body, data);
             console.info('This is expected to fail:');
-            axios({
-                url: `http://localhost:9000/admin/upload`, //*** Note these are not single quotes ' they are ` */
-                method: 'post',
-                data: data,
-               
-
-                
-                 
-              })
-               .then(response => res.status(200).json(response.data.data))
-               .catch((error) => res.status(500).json(error.response.data));
-            }
-        
-          render() {
-           
-            
-            const {
-              handleSubmit,
-              reset,
-            } = this.props;
-            return (
-              <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-                <div>
-                  <label htmlFor={FILE_FIELD_NAME}>Files</label>
-                  <Field
-                    name={FILE_FIELD_NAME}
-                    component={renderDropzoneInput}
-                  />
-                  <Field
-                    name={FILE_FIELD_BUCKET}
-                    component={BucketName}
-                  />
-               
-                </div>
-                <div>
-                  <button type="submit">
-                    Submit
-                  </button>
-                  <button onClick={reset}>
-                    Clear Values
-                  </button>
-                </div>
-              </form>
-            );
+            fetch(`http://localhost:9000/admin/upload`, {
+              method: 'POST',
+              body: body,
+            })
+            .then(res => res.json())
+            .then(res => console.log(res))
+            .catch(err => console.error(err));
           }
-        }
         
+            render() {
+              const {
+                handleSubmit,
+                reset,
+              } = this.props;
+              return (
+                <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+                  <div>
+                    <label htmlFor={FILE_FIELD_NAME}>Files</label>
+                    <Field
+                      name={FILE_FIELD_NAME}
+                      component={renderDropzoneInput}
+                    />
+                  </div>
+                  <div>
+                    <button type="submit">
+                      Submit
+                    </button>
+                    <button onClick={reset}>
+                      Clear Values
+                    </button>
+                  </div>
+                </form>
+              );
+            }
+          }
+          
         Mp3Dropzone = reduxForm({
           form: 'upload',
         })(Mp3Dropzone);
