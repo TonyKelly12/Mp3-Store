@@ -8,13 +8,13 @@ import BucketName from './bucketName';
 
 
 
-const FILE_FIELD_NAME = 'files';
+const FILE_FIELD_NAME = 'song';
 
 
 
 
 const renderDropzoneInput = (field) => {
-  const files = field.input.value;
+  const song = field.input.value;
   return (
     <div>
       <Dropzone
@@ -26,9 +26,9 @@ const renderDropzoneInput = (field) => {
       {field.meta.touched &&
         field.meta.error &&
         <span className="error">{field.meta.error}</span>}
-      {files && Array.isArray(files) && (
+      {song && Array.isArray(song) && (
         <ul>
-          { files.map((file, i) => <li key={i}>{file.name}</li>) }
+          { song.map((file, i) => <li key={i}>{file.name}</li>) }
         </ul>
       )}
     </div>
@@ -61,19 +61,27 @@ class Mp3Dropzone extends Component {
                
           onSubmit(data) {
             var body = new FormData();
-            Object.keys(data).forEach(( key ) => {
+          Object.keys(data).forEach(( key ) => {
+              
+            
+              
               body.append(key, data[ key ]);
             });
         
-            console.info('POST', body, data);
+            console.info('POST',  data);
             console.info('This is expected to fail:');
-            fetch(`http://localhost:9000/admin/upload`, {
-              method: 'POST',
-              body: body,
+            axios({
+              
+              url: `http://localhost:9000/admin/upload`, //*** Note these are not single quotes ' they are ` */
+              method: 'post',
+             
+              data: {
+                body
+                    
+              },
             })
-            .then(res => res.json())
-            .then(res => console.log(res))
-            .catch(err => console.error(err));
+             .then(response => res.status(200).json(response.data.data))
+             .catch((error) => res.status(500).json(error.response.data));
           }
         
             render() {

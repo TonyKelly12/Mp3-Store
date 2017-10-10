@@ -6,8 +6,6 @@ var router = express.Router();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var path = require('path')
-var formidable = require('formidable');
-var fs = require('fs');
 var multer  = require('multer')
 var User = require('../../models/User');
 const Storage = require('@google-cloud/storage');
@@ -18,7 +16,7 @@ const JWT_SECRET = 'J5bn&vwMW1%vRP1x';
 
 // Instantiates a client
 //const storage = Storage();
-
+var fs = require('fs');
 
 
 
@@ -177,40 +175,33 @@ const storage = multer.diskStorage({
     
   } ); 
   
-  var upload = multer({ dest: './uploads/'}).single('song');
+  var upload = multer({ storage:storage}).single('song');
   //const cpUpload = upload.fields([{ name: 'files', maxCount: 1 }, { name: 'bucketName',maxCount: 1 }])
 
 
 //TODO: Below multer not working correctly file not saving to storage.
 router.post('/upload', function (req,res)  {
-    // create an incoming form object
-  var form = new formidable.IncomingForm();
-  
-    // specify that we want to allow the user to upload multiple files in a single request
-    form.multiples = false;
-  
-    // store all uploads in the /uploads directory
-    form.uploadDir = path.join(__dirname, './uploads');
-  console.log(form.uploadDir)
-    // every time a file has been uploaded successfully,
-    // rename it to it's orignal name
-    form.on('file', function(field, file) {
-      fs.rename(file.path, path.join(form.uploadDir, file.name));
-    });
-  
-    // log any errors that occur
-    form.on('error', function(err) {
-      console.log('An error has occured: \n' + err);
-    });
-  
-    // once all the files have been uploaded, send a response to the client
-    form.on('end', function() {
-      res.end('success');
-    });
-  
-    // parse the incoming request containing the form data
-    form.parse(req);
-  
+    upload(req, res, function (err){
+        if (err){
+            res.json({error: true, message: "error in uploading"})
+        }
+        console.log('before upload function')
+       
+            if (!req.file) {
+                console.log("No file received");
+                return res.send({
+                  success: false
+                });
+            }
+        
+        const file = req.file; // file passed from client
+        const meta = req.body; //all other values passed from the client, like name, etc..
+        
+        console.log(file);
+        res.json({success:true, message:"upload function ran",  meta:file})
+
+
+    })
 
    
        
