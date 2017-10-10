@@ -187,7 +187,7 @@ router.post('/upload', function (req,res)  {
         }
         console.log('before upload function')
        
-            if (!req.file) {
+            if (!req.body) {
                 console.log("No file received");
                 return res.send({
                   success: false
@@ -197,17 +197,19 @@ router.post('/upload', function (req,res)  {
         const file = req.file; // file passed from client
         const meta = req.body; //all other values passed from the client, like name, etc..
         
-        console.log(file);
+        console.log(meta.song);
 
         // do whatever you want with the file content
-    gStorage.bucket('45tonytone')
+  /*
+        gStorage.bucket('45tonytone')
     .upload(file.path)
    .then(() => {
-     console.log(`${filename} uploaded to ${bucketName}.`);
+     console.log('uploaded to bucket');
     })
     .catch((err) => {
       console.error('ERROR:', err);
-    }); 
+    });
+    */ 
 
         res.json({success:true, message:"upload function ran",  meta:file})
 
@@ -217,6 +219,7 @@ router.post('/upload', function (req,res)  {
    
        
 });
+
  module.exports = router;  
     // Imports the Google Cloud client library
     // var newpath = 'http://localhost:9000/tempFiles'

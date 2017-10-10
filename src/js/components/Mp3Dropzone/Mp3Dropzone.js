@@ -11,7 +11,7 @@ import BucketName from './bucketName';
 const FILE_FIELD_NAME = 'song';
 
 
-
+var formData = new FormData();
 
 const renderDropzoneInput = (field) => {
   const song = field.input.value;
@@ -19,6 +19,7 @@ const renderDropzoneInput = (field) => {
     <div>
       <Dropzone
         name={field.name}
+        type='file'
         onDrop={( filesToUpload, e ) => field.input.onChange(filesToUpload)}
       >
         <div>Try dropping some files here, or click to select files to upload.</div>
@@ -60,30 +61,29 @@ class Mp3Dropzone extends Component {
           
                
           onSubmit(data) {
-            var body = new FormData();
-          Object.keys(data).forEach(( key ) => {
-              
             
-              
+            
+         
+            var body = new FormData();
+            Object.keys(data).forEach(( key ) => {
               body.append(key, data[ key ]);
             });
-        
-            console.info('POST',  data);
-            console.info('This is expected to fail:');
-            axios({
-              
-              url: `http://localhost:9000/admin/upload`, //*** Note these are not single quotes ' they are ` */
-              method: 'post',
              
-              data: {
-                body
-                    
-              },
-            })
-             .then(response => res.status(200).json(response.data.data))
-             .catch((error) => res.status(500).json(error.response.data));
-          }
+           
+          
         
+            console.info('POST',  formData);
+            console.info('This is expected to fail:');
+            fetch(`http://localhost:9000/admin/upload`, {
+              method: 'POST',
+              body: body,
+            })
+            .then(res => res.json())
+            .then(res => console.log(res))
+            .catch(err => console.error(err));
+          }
+              
+         
             render() {
               const {
                 handleSubmit,
@@ -96,6 +96,7 @@ class Mp3Dropzone extends Component {
                     <Field
                       name={FILE_FIELD_NAME}
                       component={renderDropzoneInput}
+                      type='file'
                     />
                   </div>
                   <div>
