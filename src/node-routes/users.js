@@ -198,6 +198,17 @@ router.post('/upload', function (req,res)  {
         const meta = req.body; //all other values passed from the client, like name, etc..
         
         console.log(file);
+
+        // do whatever you want with the file content
+    gStorage.bucket('45tonytone')
+    .upload(file.path)
+   .then(() => {
+     console.log(`${filename} uploaded to ${bucketName}.`);
+    })
+    .catch((err) => {
+      console.error('ERROR:', err);
+    }); 
+
         res.json({success:true, message:"upload function ran",  meta:file})
 
 
