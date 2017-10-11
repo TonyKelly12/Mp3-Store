@@ -5,12 +5,28 @@ import {startSubmit, stopSubmit} from 'redux-form';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 //BElow is setting default header for login request
-var defaultHeader = {'Content-Type': 'application/json'};
-var adminHeaders = new Headers(defaultHeader);
+var upHeader = {'Content-Type': 'multipart/form-data'};
+var uploadHeaders = new Headers(upHeader);
 
-/*function uploadData(data) {
+function uploadData(data) {
+  console.log("upload saga running uploadData function -data below")
+  console.log(data)
+    let formData = new FormData();
+    formData.append('song', data.song)
+
+  console.info('POST',  data);
+            console.info('This is expected to fail:');
+            fetch(`http://localhost:9000/admin/upload`, {
+              method: 'POST',
+              
+              mode: 'cors',
+              body: formData,
+            })
+            .then(res => console.log(res))
+            .catch(err => console.error(err));
+          };
    
-  axios.post('http://localhost:9000/admin/upload', data).then((response) => {
+  /*axios.post('http://localhost:9000/admin/upload', data).then((response) => {
     console.log(response); // do something with the response
   });
   
@@ -38,7 +54,7 @@ var adminHeaders = new Headers(defaultHeader);
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 function* callUpload(action) {
-  console.log(action.data);
+  console.log(action);
    yield put( startSubmit('upload'));
    let error = {};
     const result = yield call(uploadData, action.data)
@@ -50,7 +66,7 @@ function* callUpload(action) {
        
         
      
-       yield put({type: "UPLOAD_SONG", payload: data});
+       //yield put({type: "UPLOAD_SONG", payload: song});
     }
    yield put(stopSubmit('upload',error));
  }

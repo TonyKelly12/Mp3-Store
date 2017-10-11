@@ -197,7 +197,7 @@ router.post('/upload', function (req,res)  {
         const file = req.file; // file passed from client
         const meta = req.body; //all other values passed from the client, like name, etc..
         
-        console.log(meta.song);
+        console.log(meta);
 
         // do whatever you want with the file content
   /*

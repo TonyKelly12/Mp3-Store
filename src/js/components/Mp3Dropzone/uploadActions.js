@@ -1,7 +1,7 @@
-export const uploadAction = (data) => {
-    console.log('submitAction ' + data)
-     return {
-         type: "REQUEST_UPLOAD", //can named anything you want
-         data,//returns the single user object
-     }
- };
+//export const uploadAction = (song) => {
+    //console.log('uploadAction ' + song)
+    // return {
+      //   type: "REQUEST_UPLOAD", //can named anything you want
+      //  song,//returns the single user object
+     //}
+ //};

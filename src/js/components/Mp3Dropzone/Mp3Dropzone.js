@@ -3,16 +3,15 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import {connect} from 'react-redux';
 import Dropzone from 'react-dropzone';
-import {Field, reduxForm, Form,SubmissionError  } from 'redux-form';
+import {Field, reduxForm, Form,SubmissionError, propTypes} from 'redux-form';
 import BucketName from './bucketName';
 
-
-
+import {bindActionCreators} from 'redux';
+//GLOBAL VAR
 const FILE_FIELD_NAME = 'song';
 
 
-var formData = new FormData();
-
+//This Function Renders React Dropzone
 const renderDropzoneInput = (field) => {
   const song = field.input.value;
   return (
@@ -38,91 +37,51 @@ const renderDropzoneInput = (field) => {
 
 
 
+const submit = ({
+  song=[]}, uploadAction) => {
+  
+  let error = {};
+  let isError = false;
+  
+  if (song ===[]){
+    error.song = 'File is Required';
+    isError = true;
 
-class Mp3Dropzone extends Component {
-    constructor(props) {    // fires before component is mounted    
-        super(props); 
-        
-        // makes this refer to this component
-            this.state = {
-                
-                isAuthenicated:{},
-                acceptedFiles: [],
-                rejectedFiles: [],
-                
-            } 
-        }
-        static propTypes = {
-            handleSubmit: PropTypes.func.isRequired,
-            reset: PropTypes.func.isRequired,
-          };
-        
-          
-          
-               
-          onSubmit(data) {
-            
-            
-         
-            var body = new FormData();
-            Object.keys(data).forEach(( key ) => {
-              body.append(key, data[ key ]);
-            });
-             
-           
-          
-        
-            console.info('POST',  formData);
-            console.info('This is expected to fail:');
-            fetch(`http://localhost:9000/admin/upload`, {
-              method: 'POST',
-              body: body,
-            })
-            .then(res => res.json())
-            .then(res => console.log(res))
-            .catch(err => console.error(err));
-          }
-              
-         
-            render() {
-              const {
-                handleSubmit,
-                reset,
-              } = this.props;
-              return (
-                <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-                  <div>
-                    <label htmlFor={FILE_FIELD_NAME}>Files</label>
-                    <Field
-                      name={FILE_FIELD_NAME}
-                      component={renderDropzoneInput}
-                      type='file'
-                    />
-                  </div>
-                  <div>
-                    <button type="submit">
-                      Submit
-                    </button>
-                    <button onClick={reset}>
-                      Clear Values
-                    </button>
-                  </div>
-                </form>
-              );
-            }
-          }
-          
-        Mp3Dropzone = reduxForm({
-          form: 'upload',
-        })(Mp3Dropzone);
+  }if (isError){
+    throw new SubmissionError(error);
+  } else {
+    
+   
+    //submit form to server
+    uploadAction({song})
+  }
+}
 
-        const mapStateToProps = (state, ownProps) => {
-          return {
-              activeAdmin: state.activeAdmin
-          }
-      }
+const SongDropzone = ({handleSubmit, uploadAction}) =>(
+ <form encType = 'multipart/form-data' onSubmit={handleSubmit((fields) => submit(fields, uploadAction))}>
+        <div>
+          <label htmlFor={FILE_FIELD_NAME}>Files</label>
+          <Field
+            name={FILE_FIELD_NAME}
+            component={renderDropzoneInput}
+            type='file'
+          />
+        </div>
+        <div>
+        <input type="submit" value="Upload Song"/>
+          
+        </div>
+      </form>
+    );
+  
 
-      export default connect(mapStateToProps) (Mp3Dropzone);
+        
+const Mp3Dropzone = reduxForm({
+  form: 'upload',
+})(SongDropzone);
+
+
+export default Mp3Dropzone;
       
   
   //Exports state and connects it to UserDetail component only
