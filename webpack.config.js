@@ -2,13 +2,18 @@
  * Created by toned_000 on 8/5/2017.
  * var debug = process.env.NODE_ENV !== "production";
  */
-const glob = require('glob');
+
+ //IMPORTS 
+ const glob = require('glob');
 const webpack = require('webpack');
 const path = require('path');
 const bootstrapEntryPoints = require('./webpack.bootstrap.config');
 const PurifyCSSPlugin = require('purifycss-webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+
+//Checks to see if we are running in development or production mode
 var isProd = process
   .argv
   .indexOf('-p') !== -1; //will return true or false
@@ -29,6 +34,7 @@ const bootstrapConfig = isProd
   ? bootstrapEntryPoints.prod
   : bootstrapEntryPoints.dev;
 
+  //WEB Pack CONFIG
 module.exports = {
   context: path.join(__dirname, "src"),
 //entry point using bottstrap config and babel-poly fill
@@ -48,7 +54,7 @@ module.exports = {
           publicPath: '/dist'
         })
       },
-      //Test all js files and runs them thru the babel loader
+      //Test all files and runs them assigned loader
       {
         test: /\.js$/,
         exclude: /node_modules/,
