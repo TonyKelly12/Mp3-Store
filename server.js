@@ -18,25 +18,15 @@ const formidable = require('formidable');
      // inside Google Compute Engine.
 const gstore = require('gstore-node');
 const datastore = require('@google-cloud/datastore')({
-    projectId: 'react-store',
+                  projectId: 'react-store',
 });
-
-
 // Then connect gstore to the datastore
 gstore.Promise = global.Promise;
 gstore.connect(datastore);
 const gcs = require('@google-cloud/storage');
 const gce = require('@google-cloud/compute');
 
-    //below are the buckets for the gcs google storage
-//const backups = gcs.bucket('backups');
-//const users = gcs.bucket('users');
-
-//backups.upload('db.zip', function(err, file) {
-     // file.createReadStream();
-     // file.getMetadata();
-    // ...
-//});
+  
 
 
 //File path to routes js files
@@ -57,6 +47,7 @@ app.set('view engine', 'handlebars'); */
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({extended: false,
                                 limit: '50mb'}));
+//cookieParser middleware=-                                
 app.use(cookieParser());
 
 //Set Static Folder
@@ -99,7 +90,7 @@ app.use(expressValidator({
 //Connect Flash
 app.use(flash());
 
-//Flash global Vars
+//Flash error messages global Vars
 app.use(function (req, res, next) {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
@@ -108,30 +99,28 @@ app.use(function (req, res, next) {
     next();
 
 });
-
-
-
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, cache-control");
-    next();
-  });
-
 app.use(function(err,req,res,next){
     console.log(err)
 });
 
+//Whitelist of Request header options to accept.
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+
+//creates admin route
 app.use('/admin', admin)
 
 
-
+//Test to verify server is up 
 app.get('/', function (req,res) {
     res.status(200).send('hello it works!');
 });
 
-
-
-var server = app.listen(process.env.PORT || '9000', function(){
+//Creating the server instance
+  var server = app.listen(process.env.PORT || '9000', function(){
     console.log('App listening on port %s', server.address().port);
     console.log('Press ctrl + c to quite');
 });

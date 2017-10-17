@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Field, reduxForm, propTypes, SubmissionError} from 'redux-form';
 import {browserHistory} from 'react-router';
-
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
@@ -70,9 +69,6 @@ const LoginForm = ({handleSubmit, submitAction}) => (
        
         <div>  
         <input type="submit" value="Login"/>
-          
-         
-        
         </div>
       </form>
 

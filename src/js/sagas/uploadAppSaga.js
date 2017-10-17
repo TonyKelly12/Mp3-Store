@@ -5,10 +5,11 @@ import {startSubmit, stopSubmit} from 'redux-form';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 //BElow is setting default header for login request
-var upHeader = {'Content-Type': 'multipart/form-data'};
+var upHeader = {'Content-Type': 'multipart/form-data','Access-Control-Allow-Origin': 'http://localhost:8080'};
 var uploadHeaders = new Headers(upHeader);
 
 function uploadData(data) {
+  console.log(uploadHeaders);
   console.log("upload saga running uploadData function -data below")
   console.log(data)
     let formData = new FormData();

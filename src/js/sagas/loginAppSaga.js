@@ -53,7 +53,7 @@ function* callLogin(action) {
     const result = yield call(loginAdmin, action.data)
     if (result.error) {
        yield put({type: "USER_FETCH_FAILED", error: result.error});
-       error = result.error
+         error = result.error
     } else {
         //const authKey = result.entityKey.id;
         //const user = result.entityData;

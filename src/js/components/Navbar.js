@@ -22,8 +22,8 @@ class Navbar extends React.Component{
     
     
      logout(props){
-         console.log("admin logout " + this.props.activeAdmin)
-         props.preventDefault();
+        console.log("admin logout " + this.props.activeAdmin)
+        props.preventDefault();
         this.logout(this.props.activeAdmin.admin);
     }
 

@@ -17,8 +17,6 @@
 
      export const logout = () => {
        console.log('logout running')
-       
-       
        return {
         type: "REQUEST_LOGOUT",
         

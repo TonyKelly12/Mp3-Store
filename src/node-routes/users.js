@@ -141,7 +141,7 @@ passport.deserializeUser(function(id, done) {
 });
 process.on('unhandledRejection', error => {
     // Prints "unhandledRejection woops!"
-    console.log("Handling rejected promise in a shitty way for now");
+    console.log("Handling rejected promise in a terrible way for now");
   });
 // login function 
 //TODO: Fix unhandled promise fro when a user logs in but user exist in database
@@ -149,7 +149,7 @@ router.post('/login',
 passport.authenticate('local'),
 
 function(req, res) {
-   
+   //responds with the user token
     res.json(req.user.token);
 });
 // Logout Function
